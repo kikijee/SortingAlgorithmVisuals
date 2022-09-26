@@ -87,17 +87,21 @@ class Sorting:
                     
     def merge_sort(self,mode,arr = []):
         if len(arr) == 0: arr = self.arr.copy()
+        # check if number of elements in arr is greater than 1
         if len(arr) > 1:
+            # dividing array into sub arrays'
             left_arr = arr[:len(arr)//2]
             right_arr = arr[len(arr)//2:]
-
+            # recursion
             self.merge_sort(mode,left_arr)
             self.merge_sort(mode,right_arr)
 
             i = 0 # left
             j = 0 # right
             k = 0 # new
+            # acsending order
             if mode == True:
+                # adding the sublists into the new list
                 while i < len(left_arr) and j < len(right_arr):
                     if left_arr[i] < right_arr[j]:
                         arr[k] = left_arr[i]
@@ -116,7 +120,9 @@ class Sorting:
                     arr[k] = right_arr[j]
                     j += 1
                     k += 1
+            # decsending order
             else:
+                # adding the sublists into the new list
                 while i < len(left_arr) and j < len(right_arr):
                     if left_arr[i] > right_arr[j]:
                         arr[k] = left_arr[i]
@@ -137,12 +143,97 @@ class Sorting:
                     k += 1
             return arr
 
-
-    def quick_sort(self,mode):
-        arr = self.arr.copy()
+    def quick_sort(self,mode,arr = [],left = -1,right = -1):
+        if len(arr) == 0:
+            arr = self.arr.copy()
+            left = 0
+            right = len(arr)-1
+        if left < right:
+            # recursion
+            partition_pos = self.partition(mode,arr,left,right)
+            self.quick_sort(mode, arr, left, partition_pos-1)
+            self.quick_sort(mode, arr,partition_pos+1,right)
+        return arr
+    # helper function to quick sort
+    def partition(self,mode,arr,left,right):
+        i = left           # left incrementer
+        j = right-1        # right incrementer
+        pivot = arr[right] # piviot will always be the right most element
+        # acsending order
+        if mode == True:
+            while i < j:
+                while i < right and arr[i] < pivot:
+                    i += 1
+                while j > left and arr[j] > pivot:
+                    j -= 1
+                if i < j:
+                    arr[i], arr[j] = arr[j], arr[i]
+            if arr[i] > pivot:
+                arr[i], arr[right] = arr[right], arr[i]
+        # decsending order
+        else:
+            while i < j:
+                while i < right and arr[i] > pivot:
+                    i += 1
+                while j > left and arr[j] < pivot:
+                    j -= 1
+                if i < j:
+                    arr[i], arr[j] = arr[j], arr[i]
+            if arr[i] < pivot:
+                arr[i], arr[right] = arr[right], arr[i]
+        return i
 
     def heap_sort(self,mode):
         arr = self.arr.copy()
+        # first loop iteration will bring largest element to root, heapify
+        for i in range((len(arr)-2)//2,-1,-1): # range is the last parent
+            self.sift_down(arr,i,len(arr))
+        # second loop iteration actually sorts the list
+        for j in range(len(arr)-1,0,-1):
+            arr[0], arr[j] = arr[j], arr[0]
+            self.sift_down(arr,0,j)
+        
+        
+        return arr
+    #i is the parent index and upper is the bounds of the array that we are to stay within
+    def sift_down(self,arr,i,upper):
+        while(True):
+            left_child = i*2+1
+            right_child = i*2+2
+            # checking if left and right child are valid index's note: upper can be anything 1-len(arr)
+            if max(left_child,right_child) < upper:
+                # checking if parent is of a higher value than its children, if so then break
+                if arr[i] >= max(arr[left_child],arr[right_child]): break
+                # if left child is greater than parent, then swap
+                elif arr[left_child] > arr[right_child]:
+                    arr[left_child], arr[i] = arr[i], arr[left_child]
+                    i = left_child  # must update parent
+                # if right child is greater than parent, then swap
+                else:
+                    arr[right_child], arr[i] = arr[i], arr[right_child]
+                    i = right_child # must update parent
+            # check left child
+            elif left_child < upper:
+                # if left child is greater than parent, then swap
+                if arr[left_child] > arr[i]:
+                    arr[left_child], arr[i] = arr[i], arr[left_child]
+                    i = left_child  # must update parent
+                # if this statement hits, it means that there is no need to continue
+                else: break
+            elif right_child < upper:
+                # if left child is greater than parent, then swap
+                if arr[right_child] > arr[i]:
+                    arr[right_child], arr[i] = arr[i], arr[right_child]
+                    i = right_child  # must update parent
+                # if this statement hits, it means that there is no need to continue
+                else: break
+            # conditional for no children
+            else: break
+
+
+
+
+
 
     def radix_sort(self,mode):
         arr = self.arr.copy()
@@ -152,6 +243,6 @@ if __name__ == '__main__':
     # True = ascending order
     # False = decending order
     
-    L = Sorting(10,0,100)
+    L = Sorting(7,1,20)
     print(L.arr)
-    print(L.merge_sort(False))
+    print(L.heap_sort(False))
