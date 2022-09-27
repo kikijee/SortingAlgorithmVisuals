@@ -143,29 +143,6 @@ class Sorting:
                     k += 1
             return arr
 
-class GUI:
-
-    def __init__(self, root):
-        # base window attributes
-        self.master = root
-        self.master.title("Sorting Algorithm Visuals")
-        self.master.geometry("1100x600")
-        self.master.maxsize(1100,600)
-        self.master.config(bg="black")
-
-        #frame / base layout
-        canvas = Canvas(self.master,width=875,height=400,bg='white')
-        canvas.grid(row=0,column=0,padx=10,pady=5)
-
-        UI_frame = Frame(self.master,width=875,height=170,bg="#4f4f4f")
-        UI_frame.grid(row=1,column=0,padx=10,pady=5)
-
-        stat_frame = Frame(self.master,width=190,height=400,bg="#8ec284")
-        stat_frame.grid(row=0,column=1,pady=5)
-
-        box_frame = Frame(self.master,width=190,height=170,bg="#ad90d1")
-        box_frame.grid(row=1,column=1,pady=5)
-
     def quick_sort(self,mode,arr = [],left = -1,right = -1):
         if len(arr) == 0:
             arr = self.arr.copy()
@@ -250,6 +227,31 @@ class GUI:
                 else: break
             # conditional for no children
             else: break
+
+class GUI:
+
+    def __init__(self, root):
+        # base window attributes
+        self.master = root
+        self.master.title("Sorting Algorithm Visuals")
+        self.master.geometry("1100x600")
+        self.master.maxsize(1100,600)
+        self.master.config(bg="black")
+
+        #frame / base layout
+        canvas = Canvas(self.master,width=875,height=400,bg='white')
+        canvas.grid(row=0,column=0,padx=10,pady=5)
+
+        UI_frame = Frame(self.master,width=875,height=170,bg="#4f4f4f")
+        UI_frame.grid(row=1,column=0,padx=10,pady=5)
+
+        stat_frame = Frame(self.master,width=190,height=400,bg="#8ec284")
+        stat_frame.grid(row=0,column=1,pady=5)
+
+        box_frame = Frame(self.master,width=190,height=170,bg="#ad90d1")
+        box_frame.grid(row=1,column=1,pady=5)
+
+ 
 
 
 if __name__ == '__main__':
