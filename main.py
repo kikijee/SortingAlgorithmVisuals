@@ -143,6 +143,14 @@ class Sorting:
                     k += 1
             return arr
 
+class GUI:
+
+    def __init__(self, root):
+        #Master is the default prarent object of all widgets.
+        #You can think of it as the window that pops up when you run the GUI code.
+        self.master = root
+        self.master.title("Sorting Algorithm Visuals")
+
     def quick_sort(self,mode,arr = [],left = -1,right = -1):
         if len(arr) == 0:
             arr = self.arr.copy()
@@ -162,13 +170,13 @@ class Sorting:
         # acsending order
         if mode == True:
             while i < j:
-                while i < right and arr[i] < pivot:
+                while i < right and arr[i] < pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
-                while j > left and arr[j] > pivot:
+                while j > left and arr[j] > pivot:  # increment j until we find a element less than less than pivot
                     j -= 1
-                if i < j:
+                if i < j:   # swap these elements if i and j did not cross yet
                     arr[i], arr[j] = arr[j], arr[i]
-            if arr[i] > pivot:
+            if arr[i] > pivot:  # if our ending position of i is greater than pivot, swap these values
                 arr[i], arr[right] = arr[right], arr[i]
         # decsending order
         else:
@@ -192,8 +200,6 @@ class Sorting:
         for j in range(len(arr)-1,0,-1):
             arr[0], arr[j] = arr[j], arr[0]
             self.sift_down(arr,0,j)
-        
-        
         return arr
     #i is the parent index and upper is the bounds of the array that we are to stay within
     def sift_down(self,arr,i,upper):
@@ -231,18 +237,9 @@ class Sorting:
             else: break
 
 
-
-
-
-
-    def radix_sort(self,mode):
-        arr = self.arr.copy()
-
-
 if __name__ == '__main__':
     # True = ascending order
     # False = decending order
-    
-    L = Sorting(7,1,20)
-    print(L.arr)
-    print(L.heap_sort(False))
+    myTkRoot = Tk()
+    my_gui = GUI(myTkRoot)
+    myTkRoot.mainloop()
