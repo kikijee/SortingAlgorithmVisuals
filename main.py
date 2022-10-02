@@ -1,14 +1,17 @@
+from ast import Delete
 from tkinter import *
+from tkinter import ttk
 import random
+import tkinter.messagebox
 
 class Sorting:
 
-    def __init__(self,num_elem,min_num,max_num):
+    def __init__(self,num_elem = -1,min_num = -1,max_num = -1):
         self.num_elem = num_elem
         self.min_num = min_num
         self.max_num = max_num
         self.arr = []
-
+    
         for x in range(self.num_elem):
             self.arr.append(random.randint(self.min_num,self.max_num))
 
@@ -143,29 +146,6 @@ class Sorting:
                     k += 1
             return arr
 
-class GUI:
-
-    def __init__(self, root):
-        # base window attributes
-        self.master = root
-        self.master.title("Sorting Algorithm Visuals")
-        self.master.geometry("1100x600")
-        self.master.maxsize(1100,600)
-        self.master.config(bg="black")
-
-        #frame / base layout
-        canvas = Canvas(self.master,width=875,height=400,bg='white')
-        canvas.grid(row=0,column=0,padx=10,pady=5)
-
-        UI_frame = Frame(self.master,width=875,height=170,bg="#4f4f4f")
-        UI_frame.grid(row=1,column=0,padx=10,pady=5)
-
-        stat_frame = Frame(self.master,width=190,height=400,bg="#8ec284")
-        stat_frame.grid(row=0,column=1,pady=5)
-
-        box_frame = Frame(self.master,width=190,height=170,bg="#ad90d1")
-        box_frame.grid(row=1,column=1,pady=5)
-
     def quick_sort(self,mode,arr = [],left = -1,right = -1):
         if len(arr) == 0:
             arr = self.arr.copy()
@@ -250,6 +230,87 @@ class GUI:
                 else: break
             # conditional for no children
             else: break
+
+
+class GUI:
+
+    def __init__(self, root):
+        # variables & functions
+        self.algChoice = StringVar()
+        self.arrObj = Sorting()
+        # base window attributes
+        self.master = root
+        self.master.title("Sorting Algorithm Visuals")
+        self.master.geometry("1100x600")
+        self.master.maxsize(1100,600)
+        self.master.config(bg="black")
+
+        #frame / base layout
+        self.canvas = Canvas(self.master,width=875,height=400,bg='white')
+        self.canvas.grid(row=0,column=0,padx=10,pady=5)
+
+        self.UI_frame = Frame(self.master,width=875,height=170,bg="#4f4f4f") #grey
+        self.UI_frame.grid(row=1,column=0,padx=10,pady=5)
+
+        self.stat_frame = Frame(self.master,width=190,height=400,bg="#8ec284") #green
+        self.stat_frame.grid(row=0,column=1,pady=5)
+
+        self.box_frame = Frame(self.master,width=190,height=170,bg="#ad90d1")    #purple
+        self.box_frame.grid(row=1,column=1,pady=5)
+
+        #UI Area ROW 0
+        Label(self.UI_frame,text="Algorithm",bg='grey').grid(row=0,column=0,padx=5,pady=5,sticky=W)
+        self.algMenu = ttk.Combobox(self.UI_frame,textvariable=self.algChoice,values=['Insertion Sort','Bubble Sort'])
+        self.algMenu.grid(row=0,column=1,padx=5,pady=5)
+        self.algMenu.current(0)
+        Button(self.UI_frame,text="Execute",command=self.generate,bg='red').grid(row=0,column=2,padx=5,pady=5)
+
+        #UI Area ROW 1
+        Label(self.UI_frame,text="Array Size",bg='grey').grid(row=1,column=0,padx=5,pady=5,sticky=W)
+        self.sizeEntry = Entry(self.UI_frame)
+        self.sizeEntry.grid(row=1,column=1,padx=5,pady=5,sticky=W)
+
+        Label(self.UI_frame,text="Lower Bound",bg='grey').grid(row=1,column=2,padx=5,pady=5,sticky=W)
+        self.lowerBound = Entry(self.UI_frame)
+        self.lowerBound.grid(row=1,column=3,padx=5,pady=5,sticky=W)
+
+        Label(self.UI_frame,text="Upper Bound",bg='grey').grid(row=1,column=4,padx=5,pady=5,sticky=W)
+        self.upperBound = Entry(self.UI_frame)
+        self.upperBound.grid(row=1,column=5,padx=5,pady=5,sticky=W)
+
+
+    def generate(self):
+        #if(self.arrObj): del self.arrObj    # checking if object exists
+        # checks if parameters taken from GUI are valid
+        try:
+            self.arrObj = Sorting(int(self.sizeEntry.get()),int(self.lowerBound.get()),int(self.upperBound.get()))
+        except:
+            self.input_error()
+            return
+        self.draw_data()
+
+    def draw_data(self):
+        self.canvas.delete("all")
+        c_height = 400
+        c_width = 875
+        x_width = c_width / (len(self.arrObj.arr)+1)
+        offset = 30
+        spacing = 10
+        max_elem = max(self.arrObj.arr)
+        normalized_data = [i / max_elem for i in self.arrObj.arr]
+        # i = index x = elem
+        for i,x in enumerate(normalized_data):
+            #top left
+            x0 = i * x_width + offset + spacing
+            y0 = c_height - x * 380            
+            #bottom right
+            x1 = (i+1) * x_width + offset
+            y1 = c_height
+            self.canvas.create_rectangle(x0,y0,x1,y1,fill="red")
+            self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
+        
+    def input_error(self):
+        tkinter.messagebox.showinfo("ERROR","Invalid parameters")
 
 
 if __name__ == '__main__':
