@@ -285,10 +285,11 @@ class GUI:
 
         #UI Area ROW 0
         Label(self.UI_frame,text="Algorithm",bg='grey').grid(row=0,column=0,padx=5,pady=5,sticky=W)
-        self.algMenu = ttk.Combobox(self.UI_frame,textvariable=self.algChoice,values=['Insertion Sort','Bubble Sort'])
+        self.algMenu = ttk.Combobox(self.UI_frame,textvariable=self.algChoice,values=['Insertion Sort','Bubble Sort','Selection Sort','Merge Sort','Quick Sort','Heap Sort'])
         self.algMenu.grid(row=0,column=1,padx=5,pady=5)
         self.algMenu.current(0)
-        Button(self.UI_frame,text="Execute",command=self.generate,bg='red').grid(row=0,column=2,padx=5,pady=5)
+        Button(self.UI_frame,text="Generate",command=self.generate,bg='blue').grid(row=0,column=2,padx=5,pady=5)
+        Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
 
         #UI Area ROW 1
         Label(self.UI_frame,text="Array Size",bg='grey').grid(row=1,column=0,padx=5,pady=5,sticky=W)
@@ -302,6 +303,20 @@ class GUI:
         Label(self.UI_frame,text="Upper Bound",bg='grey').grid(row=1,column=4,padx=5,pady=5,sticky=W)
         self.upperBound = Entry(self.UI_frame)
         self.upperBound.grid(row=1,column=5,padx=5,pady=5,sticky=W)
+
+        #UI Area ROW 2
+        self.execSpeed = Scale(self.UI_frame,from_=0.0,to=2.0,length=150,digits=2,resolution=0.2,orient=HORIZONTAL,label="Execution Speed",bg="grey")
+        self.execSpeed.grid(row=2,column=0,padx=5,pady=5,sticky=W)
+        
+        #Bottom right UI ROW 0
+        self.ppButton = Button(self.box_frame,text="PAUSE",bg='grey')
+        self.ppButton.grid(row=0,column=1,padx=5,pady=5)
+
+        Button(self.box_frame,text="<",bg='grey').grid(row=0,column=0,padx=5,pady=5)
+        Button(self.box_frame,text=">",bg='grey').grid(row=0,column=2,padx=5,pady=5)
+
+
+
 
 
     def generate(self):
@@ -319,8 +334,8 @@ class GUI:
         c_height = 400
         c_width = 875
         x_width = c_width / (len(self.arrObj.arr)+1)
-        offset = 30
-        spacing = 10
+        offset = 0 #30
+        spacing = 0 #10
         max_elem = max(self.arrObj.arr)
         normalized_data = [i / max_elem for i in self.arrObj.arr]
         # i = index x = elem
@@ -333,6 +348,9 @@ class GUI:
             y1 = c_height
             self.canvas.create_rectangle(x0,y0,x1,y1,fill="red")
             self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
+
+    def execute(self):
+        pass
         
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
