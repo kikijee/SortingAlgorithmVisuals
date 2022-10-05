@@ -1,8 +1,10 @@
 from ast import Delete
+from logging import root
 from tkinter import *
 from tkinter import ttk
 import random
 import tkinter.messagebox
+import time
 
 class Sorting:
 
@@ -40,23 +42,28 @@ class Sorting:
                     arr[i] = temp
         return arr
 
-    def bubble_sort(self,mode):
-        arr = self.arr.copy()
+    def bubble_sort(self,mode,guiObj):
+        #arr = self.arr.copy()
         if mode == True:
             for i in range (self.num_elem):
                 for j in range(self.num_elem-(i+1)):
-                    if arr[j] > arr[j+1]:
-                        temp = arr[j]
-                        arr[j] = arr[j+1]
-                        arr[j+1] = temp
+                    if self.arr[j] > self.arr[j+1]:
+                        temp = self.arr[j]
+                        self.arr[j] = self.arr[j+1]
+                        self.arr[j+1] = temp
+                        guiObj.draw_data()
+                        time.sleep(0.2)
+                        
         else:
             for i in range (self.num_elem):
                 for j in range(self.num_elem-(i+1)):
-                    if arr[j] < arr[j+1]:
-                        temp = arr[j]
-                        arr[j] = arr[j+1]
-                        arr[j+1] = temp
-        return arr
+                    if self.arr[j] < self.arr[j+1]:
+                        temp = self.arr[j]
+                        self.arr[j] = self.arr[j+1]
+                        self.arr[j+1] = temp
+                        guiObj.draw_data()
+                        time.sleep(0.2)
+        #return arr
 
     def insertion_sort(self,mode):
         arr = self.arr.copy()
@@ -231,6 +238,7 @@ class Sorting:
             # conditional for no children
             else: break
 
+'''
 class GUI:
 
     def __init__(self, root):
@@ -253,9 +261,7 @@ class GUI:
 
         box_frame = Frame(self.master,width=190,height=170,bg="#ad90d1")
         box_frame.grid(row=1,column=1,pady=5)
-
- 
-
+'''
 
 class GUI:
 
@@ -315,12 +321,7 @@ class GUI:
         Button(self.box_frame,text="<",bg='grey').grid(row=0,column=0,padx=5,pady=5)
         Button(self.box_frame,text=">",bg='grey').grid(row=0,column=2,padx=5,pady=5)
 
-
-
-
-
     def generate(self):
-        #if(self.arrObj): del self.arrObj    # checking if object exists
         # checks if parameters taken from GUI are valid
         try:
             self.arrObj = Sorting(int(self.sizeEntry.get()),int(self.lowerBound.get()),int(self.upperBound.get()))
@@ -348,9 +349,12 @@ class GUI:
             y1 = c_height
             self.canvas.create_rectangle(x0,y0,x1,y1,fill="red")
             self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
+        self.master.update_idletasks()
 
     def execute(self):
-        pass
+        if self.algChoice.get() == 'Bubble Sort':
+            print(self.arrObj.bubble_sort(True,self))
+        print(self.algChoice.get())
         
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
