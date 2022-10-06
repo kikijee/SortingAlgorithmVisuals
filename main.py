@@ -18,29 +18,33 @@ class Sorting:
             self.arr.append(random.randint(self.min_num,self.max_num))
 
 
-    def selection_sort(self,mode):
-        arr = self.arr.copy()
+    def selection_sort(self,mode,guiObj):
+        #arr = self.arr.copy()
         if mode == True:
             for i in range (self.num_elem):
                 smallest = i
                 for j in range (i+1, self.num_elem):
-                    if arr[smallest] > arr[j]:
+                    if self.arr[smallest] > self.arr[j]:
                         smallest = j
                 if i != smallest:
-                    temp = arr[smallest]
-                    arr[smallest] = arr[i]
-                    arr[i] = temp
+                    temp = self.arr[smallest]
+                    self.arr[smallest] = self.arr[i]
+                    self.arr[i] = temp
+                    guiObj.draw_data()
+                    time.sleep(0.2)
         else:
             for i in range (self.num_elem):
                 largest = i
                 for j in range (i+1, self.num_elem):
-                    if arr[largest] < arr[j]:
+                    if self.arr[largest] < self.arr[j]:
                         largest = j
                 if i != largest:
-                    temp = arr[largest]
-                    arr[largest] = arr[i]
-                    arr[i] = temp
-        return arr
+                    temp = self.arr[largest]
+                    self.arr[largest] = self.arr[i]
+                    self.arr[i] = temp
+                    guiObj.draw_data()
+                    time.sleep(0.2)
+        #return arr
 
     def bubble_sort(self,mode,guiObj):
         #arr = self.arr.copy()
@@ -238,37 +242,13 @@ class Sorting:
             # conditional for no children
             else: break
 
-'''
-class GUI:
-
-    def __init__(self, root):
-        # base window attributes
-        self.master = root
-        self.master.title("Sorting Algorithm Visuals")
-        self.master.geometry("1100x600")
-        self.master.maxsize(1100,600)
-        self.master.config(bg="black")
-
-        #frame / base layout
-        canvas = Canvas(self.master,width=875,height=400,bg='white')
-        canvas.grid(row=0,column=0,padx=10,pady=5)
-
-        UI_frame = Frame(self.master,width=875,height=170,bg="#4f4f4f")
-        UI_frame.grid(row=1,column=0,padx=10,pady=5)
-
-        stat_frame = Frame(self.master,width=190,height=400,bg="#8ec284")
-        stat_frame.grid(row=0,column=1,pady=5)
-
-        box_frame = Frame(self.master,width=190,height=170,bg="#ad90d1")
-        box_frame.grid(row=1,column=1,pady=5)
-'''
-
 class GUI:
 
     def __init__(self, root):
         # variables & functions
         self.algChoice = StringVar()
         self.arrObj = Sorting()
+        self.mode = StringVar()
         # base window attributes
         self.master = root
         self.master.title("Sorting Algorithm Visuals")
@@ -296,6 +276,11 @@ class GUI:
         self.algMenu.current(0)
         Button(self.UI_frame,text="Generate",command=self.generate,bg='blue').grid(row=0,column=2,padx=5,pady=5)
         Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
+        Button(self.UI_frame,text="Reset",command=self.reset,bg='green').grid(row=0,column=4,padx=5,pady=5)
+        self.modeMenu = ttk.Combobox(self.UI_frame,textvariable=self.mode,values=['Ascending','Decsending'])
+        self.modeMenu.grid(row=0,column=5,padx=5,pady=5)
+        self.modeMenu.current(0)
+
 
         #UI Area ROW 1
         Label(self.UI_frame,text="Array Size",bg='grey').grid(row=1,column=0,padx=5,pady=5,sticky=W)
@@ -330,6 +315,12 @@ class GUI:
             return
         self.draw_data()
 
+    def reset(self):
+        self.canvas.delete("all")
+        self.sizeEntry.delete(0,'end')
+        self.lowerBound.delete(0,'end')
+        self.upperBound.delete(0,'end')
+
     def draw_data(self):
         self.canvas.delete("all")
         c_height = 400
@@ -353,8 +344,16 @@ class GUI:
 
     def execute(self):
         if self.algChoice.get() == 'Bubble Sort':
-            print(self.arrObj.bubble_sort(True,self))
-        print(self.algChoice.get())
+            if self.mode.get() == 'Ascending':
+                self.arrObj.bubble_sort(True,self)
+            else:
+                self.arrObj.bubble_sort(False,self)
+        elif self.algChoice.get() == "Selection Sort":
+            if self.mode.get() == 'Ascending':
+                self.arrObj.selection_sort(True,self)
+            else:
+                self.arrObj.selection_sort(False,self)
+
         
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
