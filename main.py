@@ -18,35 +18,43 @@ class Sorting:
             self.arr.append(random.randint(self.min_num,self.max_num))
 
 
-    def selection_sort(self,mode,guiObj):
+    def selection_sort(self,mode,guiObj,speed):
         #arr = self.arr.copy()
         if mode == True:
             for i in range (self.num_elem):
                 smallest = i
+                guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
+                time.sleep(speed)
                 for j in range (i+1, self.num_elem):
+                    guiObj.draw_data(['green' if x == i or x == j else 'blue' if x == smallest and x != i else 'red' for x in range(len(self.arr))])
+                    time.sleep(speed)
                     if self.arr[smallest] > self.arr[j]:
                         smallest = j
                 if i != smallest:
                     temp = self.arr[smallest]
                     self.arr[smallest] = self.arr[i]
                     self.arr[i] = temp
-                    guiObj.draw_data()
-                    time.sleep(0.2)
+                    guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
+                    time.sleep(speed)
         else:
             for i in range (self.num_elem):
                 largest = i
+                guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
+                time.sleep(speed)
                 for j in range (i+1, self.num_elem):
+                    guiObj.draw_data(['green' if x == i or x == j else 'blue' if x == largest and x != i else 'red' for x in range(len(self.arr))])
+                    time.sleep(speed)
                     if self.arr[largest] < self.arr[j]:
                         largest = j
                 if i != largest:
                     temp = self.arr[largest]
                     self.arr[largest] = self.arr[i]
                     self.arr[i] = temp
-                    guiObj.draw_data()
-                    time.sleep(0.2)
-        #return arr
+                    guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
+                    time.sleep(speed)
+        guiObj.draw_data(['green' for x in range(len(self.arr))])
 
-    def bubble_sort(self,mode,guiObj):
+    def bubble_sort(self,mode,guiObj,speed):
         #arr = self.arr.copy()
         if mode == True:
             for i in range (self.num_elem):
@@ -55,8 +63,8 @@ class Sorting:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
                         self.arr[j+1] = temp
-                        guiObj.draw_data()
-                        time.sleep(0.2)
+                        guiObj.draw_data(['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))])
+                        time.sleep(speed)
                         
         else:
             for i in range (self.num_elem):
@@ -65,9 +73,9 @@ class Sorting:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
                         self.arr[j+1] = temp
-                        guiObj.draw_data()
-                        time.sleep(0.2)
-        #return arr
+                        guiObj.draw_data(['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))])
+                        time.sleep(speed)
+        guiObj.draw_data(['green' for x in range(len(self.arr))])
 
     def insertion_sort(self,mode):
         arr = self.arr.copy()
@@ -313,7 +321,7 @@ class GUI:
         except:
             self.input_error()
             return
-        self.draw_data()
+        self.draw_data(['red' for x in range(len(self.arrObj.arr))])
 
     def reset(self):
         self.canvas.delete("all")
@@ -321,7 +329,7 @@ class GUI:
         self.lowerBound.delete(0,'end')
         self.upperBound.delete(0,'end')
 
-    def draw_data(self):
+    def draw_data(self,colorArr):
         self.canvas.delete("all")
         c_height = 400
         c_width = 875
@@ -338,21 +346,21 @@ class GUI:
             #bottom right
             x1 = (i+1) * x_width + offset
             y1 = c_height
-            self.canvas.create_rectangle(x0,y0,x1,y1,fill="red")
+            self.canvas.create_rectangle(x0,y0,x1,y1,fill=colorArr[i])
             self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
         self.master.update_idletasks()
 
     def execute(self):
         if self.algChoice.get() == 'Bubble Sort':
             if self.mode.get() == 'Ascending':
-                self.arrObj.bubble_sort(True,self)
+                self.arrObj.bubble_sort(True,self,self.execSpeed.get())
             else:
-                self.arrObj.bubble_sort(False,self)
+                self.arrObj.bubble_sort(False,self,self.execSpeed.get())
         elif self.algChoice.get() == "Selection Sort":
             if self.mode.get() == 'Ascending':
-                self.arrObj.selection_sort(True,self)
+                self.arrObj.selection_sort(True,self,self.execSpeed.get())
             else:
-                self.arrObj.selection_sort(False,self)
+                self.arrObj.selection_sort(False,self,self.execSpeed.get())
 
         
     def input_error(self):
