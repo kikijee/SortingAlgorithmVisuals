@@ -19,7 +19,6 @@ class Sorting:
 
 
     def selection_sort(self,mode,guiObj,speed):
-        #arr = self.arr.copy()
         if mode == True:
             for i in range (self.num_elem):
                 smallest = i
@@ -55,7 +54,6 @@ class Sorting:
         guiObj.draw_data(['green' for x in range(len(self.arr))])
 
     def bubble_sort(self,mode,guiObj,speed):
-        #arr = self.arr.copy()
         if mode == True:
             for i in range (self.num_elem):
                 for j in range(self.num_elem-(i+1)):
@@ -65,7 +63,6 @@ class Sorting:
                         self.arr[j+1] = temp
                         guiObj.draw_data(['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))])
                         time.sleep(speed)
-                        
         else:
             for i in range (self.num_elem):
                 for j in range(self.num_elem-(i+1)):
@@ -77,35 +74,46 @@ class Sorting:
                         time.sleep(speed)
         guiObj.draw_data(['green' for x in range(len(self.arr))])
 
-    def insertion_sort(self,mode):
-        arr = self.arr.copy()
+    def insertion_sort(self,mode,guiObj,speed):
         if mode == True:
             for i in range (1,self.num_elem):
-                if arr[i] < arr[i-1]:
+                guiObj.draw_data(['green' if x == i or x == i-1 else 'red' for x in range(len(self.arr))])
+                time.sleep(speed)
+                if self.arr[i] < self.arr[i-1]:
                     replace = i
                     for j in range(i,0,-1):
-                        if(arr[i] > arr[j-1]):
+                        guiObj.draw_data(['green' if x == i or x == j else 'red' for x in range(len(self.arr))])
+                        time.sleep(speed)
+                        if(self.arr[i] > self.arr[j-1]):
                             replace = j
                             break
                     if replace == i: replace = 0
-                    temp = arr[i]
+                    temp = self.arr[i]
                     for j in range (i, replace, -1):
-                        arr[j] = arr[j-1]
-                    arr[replace] = temp
+                        self.arr[j] = self.arr[j-1]
+                        guiObj.draw_data(['green' if x == i or x == replace else 'blue' if x == j or x == j-1 else 'red' for x in range(len(self.arr))])
+                        time.sleep(speed)
+                    self.arr[replace] = temp
         else:
             for i in range (1,self.num_elem):
-                if arr[i] > arr[i-1]:
+                guiObj.draw_data(['green' if x == i or x == i-1 else 'red' for x in range(len(self.arr))])
+                time.sleep(speed)
+                if self.arr[i] > self.arr[i-1]:
                     replace = i
                     for j in range(i,0,-1):
-                        if(arr[i] < arr[j-1]):
+                        guiObj.draw_data(['green' if x == i or x == j else 'red' for x in range(len(self.arr))])
+                        time.sleep(speed)
+                        if(self.arr[i] < self.arr[j-1]):
                             replace = j
                             break
                     if replace == i: replace = 0
-                    temp = arr[i]
+                    temp = self.arr[i]
                     for j in range (i, replace, -1):
-                        arr[j] = arr[j-1]
-                    arr[replace] = temp
-        return arr
+                        self.arr[j] = self.arr[j-1]
+                        guiObj.draw_data(['green' if x == i or x == replace else 'blue' if x == j or x == j-1 else 'red' for x in range(len(self.arr))])
+                        time.sleep(speed)
+                    self.arr[replace] = temp
+        guiObj.draw_data(['green' for x in range(len(self.arr))])
                     
     def merge_sort(self,mode,arr = []):
         if len(arr) == 0: arr = self.arr.copy()
@@ -356,13 +364,17 @@ class GUI:
                 self.arrObj.bubble_sort(True,self,self.execSpeed.get())
             else:
                 self.arrObj.bubble_sort(False,self,self.execSpeed.get())
-        elif self.algChoice.get() == "Selection Sort":
+        elif self.algChoice.get() == 'Selection Sort':
             if self.mode.get() == 'Ascending':
                 self.arrObj.selection_sort(True,self,self.execSpeed.get())
             else:
                 self.arrObj.selection_sort(False,self,self.execSpeed.get())
+        elif self.algChoice.get() == 'Insertion Sort':
+            if self.mode.get() == 'Ascending':
+                self.arrObj.insertion_sort(True,self,self.execSpeed.get())
+            else:
+                self.arrObj.insertion_sort(False,self,self.execSpeed.get())
 
-        
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
 
