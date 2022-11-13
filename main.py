@@ -114,26 +114,20 @@ class Sorting:
                         time.sleep(speed)
                     self.arr[replace] = temp
         guiObj.draw_data(['green' for x in range(len(self.arr))])
-                    
-    def merge_sort(self,mode,arr = []):
-        if len(arr) == 0: arr = self.arr.copy()
-        # check if number of elements in arr is greater than 1
+    '''
+    def merge_sort2(self,mode,guiObj,left,right,speed,drawArr=[],arr=[]):
+        if len(arr) == 0: arr = self.arr
         if len(arr) > 1:
-            # dividing array into sub arrays'
-            left_arr = arr[:len(arr)//2]
-            right_arr = arr[len(arr)//2:]
-            # recursion
-            self.merge_sort(mode,left_arr)
-            self.merge_sort(mode,right_arr)
+            self.merge_sort2(mode,guiObj,left,(right-left)/2)  # left array
+            self.merge_sort2(mode,guiObj,((right-left)/2)+1,right)  # right array
 
-            i = 0 # left
-            j = 0 # right
-            k = 0 # new
-            # acsending order
+            i = left #left
+            j = right #((right-left)/2)+1 #right
+            k = 0 #new
+            
             if mode == True:
-                # adding the sublists into the new list
-                while i < len(left_arr) and j < len(right_arr):
-                    if left_arr[i] < right_arr[j]:
+                while i < (((right-left)/2)-left)+1 and j < (right-(((right-left)/2)+1))+1:
+                    if arr[i] < arr[j]:
                         arr[k] = left_arr[i]
                         i += 1
                     else:
@@ -150,6 +144,66 @@ class Sorting:
                     arr[k] = right_arr[j]
                     j += 1
                     k += 1
+        '''
+                    
+    def merge_sort(self,mode,guiObj,arr,drawArr,left = 0,right = 0):
+        if len(arr) == 0: arr = self.arr.copy()
+        # check if number of elements in arr is greater than 1
+        if len(arr) > 1:
+            # dividing array into sub arrays'
+            left_arr = arr[:len(arr)//2]
+            right_arr = arr[len(arr)//2:]
+            middle = (left + right)//2
+            
+            # recursion
+            self.merge_sort(mode,guiObj,left_arr,drawArr,left,middle)
+            self.merge_sort(mode,guiObj,right_arr,drawArr,middle,right)
+
+            i = 0 # left
+            j = 0 # right
+            k = 0 # new
+            # acsending order
+            if mode == True:
+                # adding the sublists into the new list
+                #print(f'left: {left} right: {middle}')
+                while i < len(left_arr) and j < len(right_arr):
+                    drawArr[left],drawArr[middle] = 'green','green'
+                    #print(f'left: {left} right: {middle}')
+                    guiObj.draw_data(drawArr)
+                    if left_arr[i] < right_arr[j]:
+                        self.arr[left] = left_arr[i] # k
+                        arr[k] = left_arr[i]
+                        drawArr[left] = 'green'
+                        guiObj.draw_data(drawArr)
+                        i += 1
+                        left += 1
+                    else:
+                        self.arr[middle] = right_arr[j]
+                        arr[k] = right_arr[j]
+                        drawArr[middle] = 'green'
+                        guiObj.draw_data(drawArr)
+                        j += 1
+                        middle += 1
+                    k += 1
+
+                while i < len(left_arr):
+                    self.arr[left] = left_arr[i]
+                    arr[k] = left_arr[i]
+                    drawArr[left] ='green'
+                    guiObj.draw_data(drawArr)
+                    i += 1
+                    k += 1
+                    left+=1
+
+                while j < len(right_arr):
+                    self.arr[middle] = right_arr[j]
+                    arr[k] = right_arr[j]
+                    drawArr[middle] = 'green'
+                    guiObj.draw_data(drawArr)
+                    j += 1
+                    k += 1
+                    middle+=1
+                guiObj.draw_data(['green' for x in range(len(self.arr))])
             # decsending order
             else:
                 # adding the sublists into the new list
@@ -249,7 +303,7 @@ class Sorting:
                 # if this statement hits, it means that there is no need to continue
                 else: break
             elif right_child < upper:
-                # if left child is greater than parent, then swap
+                # if right child is greater than parent, then swap
                 if arr[right_child] > arr[i]:
                     arr[right_child], arr[i] = arr[i], arr[right_child]
                     i = right_child  # must update parent
@@ -372,6 +426,12 @@ class GUI:
         elif self.algChoice.get() == 'Insertion Sort':
             if self.mode.get() == 'Ascending':
                 self.arrObj.insertion_sort(True,self,self.execSpeed.get())
+            else:
+                self.arrObj.insertion_sort(False,self,self.execSpeed.get())
+        elif self.algChoice.get() == 'Merge Sort':
+            if self.mode.get() == 'Ascending':
+                print(self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],0,len(self.arrObj.arr)))
+                #print(self.arrObj.arr)
             else:
                 self.arrObj.insertion_sort(False,self,self.execSpeed.get())
 
