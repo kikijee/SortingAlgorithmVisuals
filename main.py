@@ -5,6 +5,7 @@ from tkinter import ttk
 import random
 import tkinter.messagebox
 import time
+import threading
 
 class Sorting:
 
@@ -16,7 +17,6 @@ class Sorting:
     
         for x in range(self.num_elem):
             self.arr.append(random.randint(self.min_num,self.max_num))
-
 
     def selection_sort(self,mode,guiObj,speed):
         if mode == True:
@@ -325,20 +325,16 @@ class Sorting:
                         j+=1
                         k+=1
                 
-    def quick_sort(self,guiObj,mode,arr = [],left = -1,right = -1):
-        if len(arr) == 0:
-            arr = self.arr.copy()
-            left = 0
-            right = len(arr)-1
+    def quick_sort(self,guiObj,mode,left,right):
         if left < right:
             # recursion
-            partition_pos = self.partition(guiObj,mode,arr,left,right)
-            self.quick_sort(guiObj, mode, arr, left, partition_pos-1)
-            self.quick_sort(guiObj, mode, arr,partition_pos+1,right)
+            partition_pos = self.partition(guiObj,mode,left,right)
+            self.quick_sort(guiObj, mode, left, partition_pos-1)
+            self.quick_sort(guiObj, mode, partition_pos+1,right)
         guiObj.draw_data(['green' for x in range(len(self.arr))])
         #return arr
     # helper function to quick sort
-    def partition(self,guiObj,mode,arr,left,right):
+    def partition(self,guiObj,mode,left,right):
         i = left           # left incrementer
         j = right-1        # right incrementer
         pivot = self.arr[right] # piviot will always be the right most element
@@ -350,7 +346,7 @@ class Sorting:
                 while i < right and self.arr[i] < pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
                     guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
-                while j > left and self.arr[j] > pivot:  # increment j until we find a element less than less than pivot
+                while j > left and self.arr[j] >= pivot:  # increment j until we find a element less than less than pivot
                     guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
                     j -= 1
                 if i < j:   # swap these elements if i and j did not cross yet
@@ -360,6 +356,7 @@ class Sorting:
                 self.arr[i], self.arr[right] = self.arr[right], self.arr[i]
                 guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
         # decsending order
+        '''
         else:
             while i < j:
                 while i < right and arr[i] > pivot:
@@ -370,6 +367,7 @@ class Sorting:
                     arr[i], arr[j] = arr[j], arr[i]
             if arr[i] < pivot:
                 arr[i], arr[right] = arr[right], arr[i]
+        '''
         return i
 
     def heap_sort(self,mode):
@@ -480,6 +478,10 @@ class GUI:
 
         Button(self.box_frame,text="<",bg='grey').grid(row=0,column=0,padx=5,pady=5)
         Button(self.box_frame,text=">",bg='grey').grid(row=0,column=2,padx=5,pady=5)
+    
+    def refresh(self):
+        self.master.update()
+        self.master.after(1000,self.refresh)
 
     def generate(self):
         # checks if parameters taken from GUI are valid
@@ -535,11 +537,18 @@ class GUI:
                 self.arrObj.insertion_sort(False,self,self.execSpeed.get())
         elif self.algChoice.get() == 'Merge Sort':
             if self.mode.get() == 'Ascending':
-                self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
+                self.refresh()
+                threading.Thread(target = self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
+                #self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
             else:
-                self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
+                self.refresh()
+                threading.Thread(target = self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
         elif self.algChoice.get() == 'Quick Sort':
-            self.arrObj.quick_sort(self,True)
+            self.refresh()
+            threading.Thread(target = self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)).start()
+            #self.arrObj.quick_sort(self,True)
+            #self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)
+            print(self.arrObj.arr)
 
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
