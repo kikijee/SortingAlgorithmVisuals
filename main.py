@@ -146,7 +146,7 @@ class Sorting:
                     k += 1
         '''
                     
-    def merge_sort(self,mode,guiObj,arr,drawArr,speed,left = 0,right = 0):
+    def merge_sort(self,mode,guiObj,arr,drawArr,speed = 0.05,left = 0,right = 0):
         if len(arr) == 0: arr = self.arr.copy()
         last = False
         # check if number of elements in arr is greater than 1
@@ -325,33 +325,40 @@ class Sorting:
                         j+=1
                         k+=1
                 
-    def quick_sort(self,mode,arr = [],left = -1,right = -1):
+    def quick_sort(self,guiObj,mode,arr = [],left = -1,right = -1):
         if len(arr) == 0:
             arr = self.arr.copy()
             left = 0
             right = len(arr)-1
         if left < right:
             # recursion
-            partition_pos = self.partition(mode,arr,left,right)
-            self.quick_sort(mode, arr, left, partition_pos-1)
-            self.quick_sort(mode, arr,partition_pos+1,right)
-        return arr
+            partition_pos = self.partition(guiObj,mode,arr,left,right)
+            self.quick_sort(guiObj, mode, arr, left, partition_pos-1)
+            self.quick_sort(guiObj, mode, arr,partition_pos+1,right)
+        guiObj.draw_data(['green' for x in range(len(self.arr))])
+        #return arr
     # helper function to quick sort
-    def partition(self,mode,arr,left,right):
+    def partition(self,guiObj,mode,arr,left,right):
         i = left           # left incrementer
         j = right-1        # right incrementer
-        pivot = arr[right] # piviot will always be the right most element
+        pivot = self.arr[right] # piviot will always be the right most element
+
+        guiObj.draw_data(['red' for x in range(len(self.arr))])
         # acsending order
         if mode == True:
             while i < j:
-                while i < right and arr[i] < pivot: # increment i until we find an element that is bigger than pivot
+                while i < right and self.arr[i] < pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
-                while j > left and arr[j] > pivot:  # increment j until we find a element less than less than pivot
+                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
+                while j > left and self.arr[j] > pivot:  # increment j until we find a element less than less than pivot
+                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
                     j -= 1
                 if i < j:   # swap these elements if i and j did not cross yet
-                    arr[i], arr[j] = arr[j], arr[i]
-            if arr[i] > pivot:  # if our ending position of i is greater than pivot, swap these values
-                arr[i], arr[right] = arr[right], arr[i]
+                    self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
+                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
+            if self.arr[i] > pivot:  # if our ending position of i is greater than pivot, swap these values
+                self.arr[i], self.arr[right] = self.arr[right], self.arr[i]
+                guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
         # decsending order
         else:
             while i < j:
@@ -531,6 +538,8 @@ class GUI:
                 self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
             else:
                 self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
+        elif self.algChoice.get() == 'Quick Sort':
+            self.arrObj.quick_sort(self,True)
 
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
