@@ -146,7 +146,7 @@ class Sorting:
                     k += 1
         '''
                     
-    def merge_sort(self,mode,guiObj,arr,drawArr,speed = 0.05,left = 0,right = 0):
+    def merge_sort(self,mode,guiObj,arr,drawArr,speed,left = 0,right = 0):
         if len(arr) == 0: arr = self.arr.copy()
         last = False
         # check if number of elements in arr is greater than 1
@@ -154,7 +154,7 @@ class Sorting:
             # dividing array into sub arrays'
             left_arr = arr[:len(arr)//2]
             right_arr = arr[len(arr)//2:]
-            middle = (left + right)//2
+            middle = (left + right)//2  # middle var for self.arr the arr that we are displaying on screen
             # recursion
             self.merge_sort(mode,guiObj,left_arr,drawArr,speed,left,middle)
             self.merge_sort(mode,guiObj,right_arr,drawArr,speed,middle,right)
@@ -164,16 +164,11 @@ class Sorting:
             k = 0 # new
             # acsending order
             if mode == True:
-                if(len(left_arr)+len(right_arr)==len(self.arr)): # flag for very last merge
-                    leftTemp = left     # temp vars for use in the final if for draw arr
-                    middleTemp = middle
-                    rightTemp = right
-                    last = True
                 drawArr = ['#f1b6fa' if left <= x < middle else '#7dfdff' if middle <= x < right else 'red' for x in range(len(self.arr))]
                 guiObj.draw_data(drawArr)
                 while i < len(left_arr) and j < len(right_arr):
                     if left_arr[i] < right_arr[j]:
-                        self.arr[left] = left_arr[i] # k
+                        self.arr[left] = left_arr[i] 
                         arr[k] = left_arr[i]
                         drawArr[left] = 'green'
                         guiObj.draw_data(drawArr)
@@ -181,17 +176,17 @@ class Sorting:
                         i += 1
                         left += 1
                     else:
-                        self.arr[middle] = right_arr[j] # k
+                        self.arr[left] = right_arr[j] 
                         arr[k] = right_arr[j]
-                        drawArr[middle] = 'green'
+                        drawArr[left] = 'green' 
                         guiObj.draw_data(drawArr)
                         time.sleep(speed)
                         j += 1
-                        middle += 1
+                        left += 1 
                     k += 1
 
                 while i < len(left_arr):
-                    self.arr[left] = left_arr[i] # k
+                    self.arr[left] = left_arr[i] 
                     arr[k] = left_arr[i]
                     drawArr[left] ='green'
                     guiObj.draw_data(drawArr)
@@ -201,60 +196,21 @@ class Sorting:
                     left+=1
 
                 while j < len(right_arr):
-                    self.arr[middle] = right_arr[j] # k
+                    self.arr[left] = right_arr[j] 
                     arr[k] = right_arr[j]
-                    drawArr[middle] = 'green'
+                    drawArr[left] = 'green'   
                     guiObj.draw_data(drawArr)
                     time.sleep(speed)
                     j += 1
                     k += 1
-                    middle+=1
-                if(last == True): # if condition to check if this is the very last merge for self.arr
-                    i = 0 # left
-                    j = 0 # right
-                    k = 0 # new
-                    drawArr = ['#f1b6fa' if leftTemp <= x < middleTemp else '#7dfdff' if middleTemp <= x < rightTemp else 'red' for x in range(len(self.arr))]
-                    guiObj.draw_data(drawArr)
-                    while i < len(left_arr) and j < len(right_arr):
-                        if(left_arr[i] < right_arr[j]):
-                            self.arr[k] = left_arr[i]
-                            drawArr[k] = 'green'
-                            guiObj.draw_data(drawArr)
-                            time.sleep(speed)
-                            i+=1
-                        else:
-                            self.arr[k] = right_arr[j]
-                            drawArr[k] = 'green'
-                            guiObj.draw_data(drawArr)
-                            time.sleep(speed)
-                            j+=1
-                        k+=1
-                    while i < len(left_arr):
-                        self.arr[k] = left_arr[i]
-                        drawArr[k] = 'green'
-                        guiObj.draw_data(drawArr)
-                        time.sleep(speed)
-                        i+=1
-                        k+=1
-                    while j < len(right_arr):
-                        self.arr[k] = right_arr[j]
-                        drawArr[k] = 'green'
-                        guiObj.draw_data(drawArr)
-                        time.sleep(speed)
-                        j+=1
-                        k+=1
+                    left+=1   
             # decsending order
             else:
-                if(len(left_arr)+len(right_arr)==len(self.arr)): # flag for very last merge
-                    leftTemp = left     # temp vars for use in the final if for draw arr
-                    middleTemp = middle
-                    rightTemp = right
-                    last = True
                 drawArr = ['#f1b6fa' if left <= x < middle else '#7dfdff' if middle <= x < right else 'red' for x in range(len(self.arr))]
                 guiObj.draw_data(drawArr)
                 while i < len(left_arr) and j < len(right_arr):
                     if left_arr[i] > right_arr[j]:
-                        self.arr[left] = left_arr[i] # k
+                        self.arr[left] = left_arr[i] 
                         arr[k] = left_arr[i]
                         drawArr[left] = 'green'
                         guiObj.draw_data(drawArr)
@@ -262,17 +218,17 @@ class Sorting:
                         i += 1
                         left += 1
                     else:
-                        self.arr[middle] = right_arr[j] # k
+                        self.arr[left] = right_arr[j] 
                         arr[k] = right_arr[j]
-                        drawArr[middle] = 'green'
+                        drawArr[left] = 'green'
                         guiObj.draw_data(drawArr)
                         time.sleep(speed)
                         j += 1
-                        middle += 1
+                        left += 1
                     k += 1
 
                 while i < len(left_arr):
-                    self.arr[left] = left_arr[i] # k
+                    self.arr[left] = left_arr[i] 
                     arr[k] = left_arr[i]
                     drawArr[left] ='green'
                     guiObj.draw_data(drawArr)
@@ -282,48 +238,14 @@ class Sorting:
                     left+=1
 
                 while j < len(right_arr):
-                    self.arr[middle] = right_arr[j] # k
+                    self.arr[left] = right_arr[j] 
                     arr[k] = right_arr[j]
-                    drawArr[middle] = 'green'
+                    drawArr[left] = 'green'
                     guiObj.draw_data(drawArr)
                     time.sleep(speed)
                     j += 1
                     k += 1
-                    middle+=1
-                if(last == True): # if condition to check if this is the very last merge for self.arr
-                    i = 0 # left
-                    j = 0 # right
-                    k = 0 # new
-                    drawArr = ['#f1b6fa' if leftTemp <= x < middleTemp else '#7dfdff' if middleTemp <= x < rightTemp else 'red' for x in range(len(self.arr))]
-                    guiObj.draw_data(drawArr)
-                    while i < len(left_arr) and j < len(right_arr):
-                        if(left_arr[i] > right_arr[j]):
-                            self.arr[k] = left_arr[i]
-                            drawArr[k] = 'green'
-                            guiObj.draw_data(drawArr)
-                            time.sleep(speed)
-                            i+=1
-                        else:
-                            self.arr[k] = right_arr[j]
-                            drawArr[k] = 'green'
-                            guiObj.draw_data(drawArr)
-                            time.sleep(speed)
-                            j+=1
-                        k+=1
-                    while i < len(left_arr):
-                        self.arr[k] = left_arr[i]
-                        drawArr[k] = 'green'
-                        guiObj.draw_data(drawArr)
-                        time.sleep(speed)
-                        i+=1
-                        k+=1
-                    while j < len(right_arr):
-                        self.arr[k] = right_arr[j]
-                        drawArr[k] = 'green'
-                        guiObj.draw_data(drawArr)
-                        time.sleep(speed)
-                        j+=1
-                        k+=1
+                    left+=1
                 
     def quick_sort(self,guiObj,mode,left,right):
         if left < right:
