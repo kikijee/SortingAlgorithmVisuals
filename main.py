@@ -261,22 +261,22 @@ class Sorting:
         j = right-1        # right incrementer
         pivot = self.arr[right] # piviot will always be the right most element
 
-        guiObj.draw_data(['red' for x in range(len(self.arr))])
+        guiObj.draw_data(['pink' if left <= x <= right else'red' for x in range(len(self.arr))])
         # acsending order
         if mode == True:
             while i < j:
                 while i < right and self.arr[i] < pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
-                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
+                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))])
                 while j > left and self.arr[j] >= pivot:  # increment j until we find a element less than less than pivot
-                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
+                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))])
                     j -= 1
                 if i < j:   # swap these elements if i and j did not cross yet
                     self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
-                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
+                    guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))])
             if self.arr[i] > pivot:  # if our ending position of i is greater than pivot, swap these values
                 self.arr[i], self.arr[right] = self.arr[right], self.arr[i]
-                guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'red' for x in range(len(self.arr))])
+                guiObj.draw_data(['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))])
         # decsending order
         '''
         else:
