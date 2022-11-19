@@ -114,38 +114,7 @@ class Sorting:
                         time.sleep(speed)
                     self.arr[replace] = temp
         guiObj.draw_data(['green' for x in range(len(self.arr))])
-    '''
-    def merge_sort2(self,mode,guiObj,left,right,speed,drawArr=[],arr=[]):
-        if len(arr) == 0: arr = self.arr
-        if len(arr) > 1:
-            self.merge_sort2(mode,guiObj,left,(right-left)/2)  # left array
-            self.merge_sort2(mode,guiObj,((right-left)/2)+1,right)  # right array
-
-            i = left #left
-            j = right #((right-left)/2)+1 #right
-            k = 0 #new
-            
-            if mode == True:
-                while i < (((right-left)/2)-left)+1 and j < (right-(((right-left)/2)+1))+1:
-                    if arr[i] < arr[j]:
-                        arr[k] = left_arr[i]
-                        i += 1
-                    else:
-                        arr[k] = right_arr[j]
-                        j += 1
-                    k += 1
-
-                while i < len(left_arr):
-                    arr[k] = left_arr[i]
-                    i += 1
-                    k += 1
-
-                while j < len(right_arr):
-                    arr[k] = right_arr[j]
-                    j += 1
-                    k += 1
-        '''
-                    
+          
     def merge_sort(self,mode,guiObj,arr,drawArr,speed,left = 0,right = 0):
         if len(arr) == 0: arr = self.arr.copy()
         last = False
@@ -292,46 +261,51 @@ class Sorting:
         '''
         return i
 
-    def heap_sort(self,mode):
-        arr = self.arr.copy()
+    def heap_sort(self,mode,guiObj):
+        #arr = self.arr.copy()
         # first loop iteration will bring largest element to root, heapify
-        for i in range((len(arr)-2)//2,-1,-1): # range is the last parent
-            self.sift_down(arr,i,len(arr))
+        for i in range((len(self.arr)-2)//2,-1,-1): # range is the last parent
+            self.sift_down(mode,guiObj,i,len(self.arr))
         # second loop iteration actually sorts the list
-        for j in range(len(arr)-1,0,-1):
-            arr[0], arr[j] = arr[j], arr[0]
-            self.sift_down(arr,0,j)
-        return arr
+        for j in range(len(self.arr)-1,0,-1):
+            self.arr[0], self.arr[j] = self.arr[j], self.arr[0]
+            self.sift_down(mode,guiObj,0,j)
+        guiObj.draw_data(['green' for x in range(len(self.arr))])
     #i is the parent index and upper is the bounds of the array that we are to stay within
-    def sift_down(self,arr,i,upper):
+    def sift_down(self,mode,guiObj,i,upper):
+        guiObj.draw_data(['red' for x in range(len(self.arr))])
         while(True):
             left_child = i*2+1
             right_child = i*2+2
+            guiObj.draw_data(['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))])
             # checking if left and right child are valid index's note: upper can be anything 1-len(arr)
             if max(left_child,right_child) < upper:
                 # checking if parent is of a higher value than its children, if so then break
-                if arr[i] >= max(arr[left_child],arr[right_child]): break
+                if self.arr[i] >= max(self.arr[left_child],self.arr[right_child]): break
                 # if left child is greater than parent, then swap
-                elif arr[left_child] > arr[right_child]:
-                    arr[left_child], arr[i] = arr[i], arr[left_child]
+                elif self.arr[left_child] > self.arr[right_child]:
+                    self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
                     i = left_child  # must update parent
                 # if right child is greater than parent, then swap
                 else:
-                    arr[right_child], arr[i] = arr[i], arr[right_child]
+                    self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
                     i = right_child # must update parent
+                guiObj.draw_data(['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))])
             # check left child
             elif left_child < upper:
                 # if left child is greater than parent, then swap
-                if arr[left_child] > arr[i]:
-                    arr[left_child], arr[i] = arr[i], arr[left_child]
+                if self.arr[left_child] > self.arr[i]:
+                    self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
                     i = left_child  # must update parent
+                    guiObj.draw_data(['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))])
                 # if this statement hits, it means that there is no need to continue
                 else: break
             elif right_child < upper:
                 # if right child is greater than parent, then swap
-                if arr[right_child] > arr[i]:
-                    arr[right_child], arr[i] = arr[i], arr[right_child]
+                if self.arr[right_child] > self.arr[i]:
+                    self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
                     i = right_child  # must update parent
+                    guiObj.draw_data(['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))])
                 # if this statement hits, it means that there is no need to continue
                 else: break
             # conditional for no children
@@ -461,16 +435,14 @@ class GUI:
             if self.mode.get() == 'Ascending':
                 self.refresh()
                 threading.Thread(target = self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
-                #self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
-            else:
                 self.refresh()
                 threading.Thread(target = self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
         elif self.algChoice.get() == 'Quick Sort':
             self.refresh()
             threading.Thread(target = self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)).start()
-            #self.arrObj.quick_sort(self,True)
-            #self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)
-            print(self.arrObj.arr)
+        elif self.algChoice.get() == 'Heap Sort':
+            self.refresh()
+            threading.Thread(target = self.arrObj.heap_sort(True,self))
 
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
