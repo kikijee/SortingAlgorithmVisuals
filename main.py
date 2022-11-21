@@ -367,6 +367,7 @@ class GUI:
         self.master.config(bg="black")
         # array for frames
         self.arrFrame = []
+        
 
         #frame / base layout
         self.canvas = Canvas(self.master,width=875,height=400,bg='white')
@@ -387,7 +388,9 @@ class GUI:
         self.algMenu.grid(row=0,column=1,padx=5,pady=5)
         self.algMenu.current(0)
         Button(self.UI_frame,text="Generate",command=self.generate,bg='blue').grid(row=0,column=2,padx=5,pady=5)
-        Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
+        Button(self.UI_frame,text="Execute",command=threading.Thread(target=self.execute).start,bg='red').grid(row=0,column=3,padx=5,pady=5)
+        #Button(self.UI_frame,text="Execute",command=multiprocessing.Process(target=self.execute).start,bg='red').grid(row=0,column=3,padx=5,pady=5)
+        #Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
         Button(self.UI_frame,text="Reset",command=self.reset,bg='green').grid(row=0,column=4,padx=5,pady=5)
         self.modeMenu = ttk.Combobox(self.UI_frame,textvariable=self.mode,values=['Ascending','Decsending'])
         self.modeMenu.grid(row=0,column=5,padx=5,pady=5)
@@ -441,10 +444,12 @@ class GUI:
     def frame_play(self):
         for x in self.arrFrame:
             self.draw_data_tup(x)
+            self.master.update()
+            #time.sleep(1)
         
 
     def draw_data_tup(self,frame):
-        self.canvas.delete("all")
+        #self.canvas.delete("all")
         c_height = 400
         c_width = 875
         x_width = c_width / (len(self.arrObj.arr)+1)
@@ -452,6 +457,7 @@ class GUI:
         spacing = 0 #10
         max_elem = max(frame[0])
         normalized_data = [i / max_elem for i in frame[0]]
+        self.canvas.delete("all")
         for i,x in enumerate(normalized_data):
             #top left
             x0 = i * x_width + offset + spacing
@@ -461,7 +467,9 @@ class GUI:
             y1 = c_height
             self.canvas.create_rectangle(x0,y0,x1,y1,fill=frame[1][i])
             self.canvas.create_text(x0+2,y0,anchor=SW,text=str(frame[0][i]))
-        self.master.update_idletasks()
+            self.master.update()
+        #self.master.update_idletasks()
+        self.master.update()
 
     def draw_data(self,colorArr):
         self.canvas.delete("all")
@@ -485,11 +493,14 @@ class GUI:
         self.master.update_idletasks()
 
     def execute(self):
+        self.arrFrame.clear()
         if self.algChoice.get() == 'Bubble Sort':
             if self.mode.get() == 'Ascending':
-                self.refresh()
-                threading.Thread(target = self.arrObj.bubble_sort(True,self,self.execSpeed.get())).start()
-                multiprocessing.Process(target = self.frame_play()).start()
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.bubble_sort(True,self,self.execSpeed.get())).start()
+                self.arrObj.bubble_sort(True,self,self.execSpeed.get())
+                #threading.Thread(target = self.frame_play()).start()
+                self.frame_play()
             else:
                 self.refresh()
                 threading.Thread(target = self.arrObj.bubble_sort(False,self,self.execSpeed.get())).start()
@@ -539,4 +550,4 @@ if __name__ == '__main__':
     # False = decending order
     myTkRoot = Tk()
     my_gui = GUI(myTkRoot)
-    threading.Thread(target = myTkRoot.mainloop())
+    myTkRoot.mainloop()
