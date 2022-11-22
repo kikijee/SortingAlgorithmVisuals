@@ -74,17 +74,17 @@ class Sorting:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
                         self.arr[j+1] = temp
-                        x0,_,x1,_ = guiObj.canvas.coords(guiObj.arrRec[j][0])
-                        x2,_,x3,_ = guiObj.canvas.coords(guiObj.arrRec[j+1][0])
-                        guiObj.canvas.move(guiObj.arrRec[j][0],x2-x0,0)
-                        guiObj.canvas.move(guiObj.arrRec[j+1][0],x1-x3,0)
-                        guiObj.arrRec[j],guiObj.arrRec[j+1] = guiObj.arrRec[j+1],guiObj.arrRec[j]
-                        guiObj.master.update()
-                    for k in range (len(guiObj.arrRec)):
-                        if k == j or k == j+1: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='green')
-                        else: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='red')
-                        guiObj.master.update()
-                    #guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
+                        #x0,_,x1,_ = guiObj.canvas.coords(guiObj.arrRec[j][0])
+                        #x2,_,x3,_ = guiObj.canvas.coords(guiObj.arrRec[j+1][0])
+                        #guiObj.canvas.move(guiObj.arrRec[j][0],x2-x0,0)
+                        #guiObj.canvas.move(guiObj.arrRec[j+1][0],x1-x3,0)
+                        #guiObj.arrRec[j],guiObj.arrRec[j+1] = guiObj.arrRec[j+1],guiObj.arrRec[j]
+                        #guiObj.master.update()
+                    #for k in range (len(guiObj.arrRec)):
+                        #if k == j or k == j+1: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='green')
+                        #else: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='red')
+                        #guiObj.master.update()
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
                         #time.sleep(speed)
         else:
             for i in range (self.num_elem):
@@ -383,6 +383,7 @@ class GUI:
         self.arrFrame = []
         self.arrRec = []
         self.pp = False
+        self.index = 0
         
 
         #frame / base layout
@@ -434,11 +435,27 @@ class GUI:
         self.ppButton = Button(self.box_frame,text="PAUSE",bg='grey',command=self.pause_play)
         self.ppButton.grid(row=0,column=1,padx=5,pady=5)
 
-        Button(self.box_frame,text="<",bg='grey').grid(row=0,column=0,padx=5,pady=5)
-        Button(self.box_frame,text=">",bg='grey').grid(row=0,column=2,padx=5,pady=5)
+        Button(self.box_frame,text="<",bg='grey',command=self.backward).grid(row=0,column=0,padx=5,pady=5)
+        Button(self.box_frame,text=">",bg='grey',command=self.forward).grid(row=0,column=2,padx=5,pady=5)
 
     def pause_play(self):
         self.pp = not self.pp
+        if(self.pp == False):
+            self.ppButton['text'] = 'Pause'
+        else:
+            self.ppButton['text'] = 'Play'
+
+    def forward(self):
+        self.pp = True
+        self.ppButton['text'] = 'Play'
+        if(self.index+1 < len(self.arrFrame)):
+            self.index += 1
+
+    def backward(self):
+        self.pp = True
+        self.ppButton['text'] = 'Play'
+        if(self.index-1 >= 0):
+            self.index -= 1
 
     def execute_thread(self):
         thread = threading.Thread(target = self.execute)
@@ -469,15 +486,17 @@ class GUI:
         #else: 
             #self.draw_data_tup(self.arrFrame[x])
             #self.master.after(50,self.frame_play, x+1)
+        self.index = 0
 
-        for x in self.arrFrame:
-            self.draw_data_tup(x)
+        for x in range(len(self.arrFrame)):
+            self.index = x
+            self.draw_data_tup(self.arrFrame[x])
             self.master.update()
             if(self.pp):
                 while(self.pp):
+                    self.draw_data_tup(self.arrFrame[self.index])
                     self.master.update()
-                    pass
-            #time.sleep(1)
+            time.sleep(self.execSpeed.get())
         
 
     def draw_data_tup(self,frame):
@@ -536,28 +555,33 @@ class GUI:
                 #threading.Thread(target = self.arrObj.bubble_sort(True,self,self.execSpeed.get())).start()
                 self.arrObj.bubble_sort(True,self,self.execSpeed.get())
                 #threading.Thread(target = self.frame_play()).start()
-                #self.frame_play()
+                self.frame_play()
             else:
                 #self.refresh()
-                threading.Thread(target = self.arrObj.bubble_sort(False,self,self.execSpeed.get())).start()
+                #threading.Thread(target = self.arrObj.bubble_sort(False,self,self.execSpeed.get())).start()
+                self.arrObj.bubble_sort(False,self,self.execSpeed.get())
                 self.frame_play()
         elif self.algChoice.get() == 'Selection Sort':
             if self.mode.get() == 'Ascending':
-                self.refresh()
-                threading.Thread(target = self.arrObj.selection_sort(True,self,self.execSpeed.get())).start()
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.selection_sort(True,self,self.execSpeed.get())).start()
+                self.arrObj.selection_sort(True,self,self.execSpeed.get())
                 self.frame_play()
             else:
-                self.refresh()
-                threading.Thread(target = self.arrObj.selection_sort(False,self,self.execSpeed.get())).start()
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.selection_sort(False,self,self.execSpeed.get())).start()
+                self.arrObj.selection_sort(False,self,self.execSpeed.get())
                 self.frame_play()
         elif self.algChoice.get() == 'Insertion Sort':
             if self.mode.get() == 'Ascending':
-                self.refresh()
-                threading.Thread(target = self.arrObj.insertion_sort(True,self,self.execSpeed.get())).start()
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.insertion_sort(True,self,self.execSpeed.get())).start()
+                self.arrObj.insertion_sort(True,self,self.execSpeed.get())
                 self.frame_play()
             else:
-                self.refresh()
-                threading.Thread(target = self.arrObj.insertion_sort(False,self,self.execSpeed.get())).start()
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.insertion_sort(False,self,self.execSpeed.get())).start()
+                self.arrObj.insertion_sort(False,self,self.execSpeed.get())
                 self.frame_play()
         elif self.algChoice.get() == 'Merge Sort':
             if self.mode.get() == 'Ascending':
@@ -566,16 +590,19 @@ class GUI:
                 self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
                 self.frame_play()
             else:
-                self.refresh()
-                threading.Thread(target = self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
+                self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
                 self.frame_play()
         elif self.algChoice.get() == 'Quick Sort':
-            self.refresh()
-            threading.Thread(target = self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)).start()
+            #self.refresh()
+            #threading.Thread(target = self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)).start()
+            self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)
             self.frame_play()
         elif self.algChoice.get() == 'Heap Sort':
-            self.refresh()
-            threading.Thread(target = self.arrObj.heap_sort(True,self))
+            #self.refresh()
+            #threading.Thread(target = self.arrObj.heap_sort(True,self))
+            self.arrObj.heap_sort(True,self)
             self.frame_play()
 
     def input_error(self):
