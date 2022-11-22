@@ -61,6 +61,11 @@ class Sorting:
         #guiObj.draw_data(['green' for x in range(len(self.arr))])
         guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))]))
 
+        #print(self.canvas.coords(self.arrRec[0][0]))
+        #print(self.canvas.itemcget(self.arrRec[0][0],"fill"))
+        #canvas.itemconfig(rectangle, fill='green')
+        #canvas.coords(rectangle, x0, y0, x1, y1)
+
     def bubble_sort(self,mode,guiObj,speed):
         if mode == True:
             for i in range (self.num_elem):
@@ -69,8 +74,17 @@ class Sorting:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
                         self.arr[j+1] = temp
-                        #guiObj.draw_data(['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))])
-                        guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
+                        x0,y0,x1,y1 = guiObj.canvas.coords(guiObj.arrRec[j][0])
+                        x2,y2,x3,y3 = guiObj.canvas.coords(guiObj.arrRec[j+1][0])
+                        guiObj.canvas.move(guiObj.arrRec[j][0],x2-x0,0)
+                        guiObj.canvas.move(guiObj.arrRec[j+1][0],x1-x3,0)
+                        guiObj.arrRec[j],guiObj.arrRec[j+1] = guiObj.arrRec[j+1],guiObj.arrRec[j]
+                        guiObj.master.update()
+                    for k in range (len(guiObj.arrRec)):
+                        if k == j or k == j+1: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='green')
+                        else: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='red')
+                        guiObj.master.update()
+                    #guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
                         #time.sleep(speed)
         else:
             for i in range (self.num_elem):
@@ -79,11 +93,11 @@ class Sorting:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
                         self.arr[j+1] = temp
-                        #guiObj.draw_data(['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))])
-                        guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
+
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
                         #time.sleep(speed)
         #guiObj.draw_data(['green' for x in range(len(self.arr))])
-        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))]))
+        #guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))]))
 
 
     def insertion_sort(self,mode,guiObj,speed):
@@ -367,6 +381,7 @@ class GUI:
         self.master.config(bg="black")
         # array for frames
         self.arrFrame = []
+        self.arrRec = []
         
 
         #frame / base layout
@@ -388,7 +403,7 @@ class GUI:
         self.algMenu.grid(row=0,column=1,padx=5,pady=5)
         self.algMenu.current(0)
         Button(self.UI_frame,text="Generate",command=self.generate,bg='blue').grid(row=0,column=2,padx=5,pady=5)
-        Button(self.UI_frame,text="Execute",command=threading.Thread(target=self.execute).start,bg='red').grid(row=0,column=3,padx=5,pady=5)
+        Button(self.UI_frame,text="Execute",command=self.execute_thread,bg='red').grid(row=0,column=3,padx=5,pady=5)
         #Button(self.UI_frame,text="Execute",command=multiprocessing.Process(target=self.execute).start,bg='red').grid(row=0,column=3,padx=5,pady=5)
         #Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
         Button(self.UI_frame,text="Reset",command=self.reset,bg='green').grid(row=0,column=4,padx=5,pady=5)
@@ -420,6 +435,10 @@ class GUI:
 
         Button(self.box_frame,text="<",bg='grey').grid(row=0,column=0,padx=5,pady=5)
         Button(self.box_frame,text=">",bg='grey').grid(row=0,column=2,padx=5,pady=5)
+
+    def execute_thread(self):
+        thread = threading.Thread(target = self.execute)
+        thread.start()
     
     def refresh(self):
         self.master.update()
@@ -441,10 +460,15 @@ class GUI:
         self.lowerBound.delete(0,'end')
         self.upperBound.delete(0,'end')
 
-    def frame_play(self):
-        for x in self.arrFrame:
-            self.draw_data_tup(x)
-            self.master.update()
+    def frame_play(self,x = 0):
+        if x == len(self.arrFrame): return
+        else: 
+            self.draw_data_tup(self.arrFrame[x])
+            self.master.after(50,self.frame_play, x+1)
+
+        #for x in self.arrFrame:
+        #    self.draw_data_tup(x)
+        #    self.master.update()
             #time.sleep(1)
         
 
@@ -488,8 +512,12 @@ class GUI:
             #bottom right
             x1 = (i+1) * x_width + offset
             y1 = c_height
-            self.canvas.create_rectangle(x0,y0,x1,y1,fill=colorArr[i])
-            self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
+            self.arrRec.append((self.canvas.create_rectangle(x0,y0,x1,y1,fill=colorArr[i]),self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))))
+            #self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
+        print(self.canvas.coords(self.arrRec[0][0]))
+        print(self.canvas.itemcget(self.arrRec[0][0],"fill"))
+        #canvas.itemconfig(rectangle, fill='green')
+        #canvas.coords(rectangle, x0, y0, x1, y1)
         self.master.update_idletasks()
 
     def execute(self):
@@ -500,7 +528,7 @@ class GUI:
                 #threading.Thread(target = self.arrObj.bubble_sort(True,self,self.execSpeed.get())).start()
                 self.arrObj.bubble_sort(True,self,self.execSpeed.get())
                 #threading.Thread(target = self.frame_play()).start()
-                self.frame_play()
+                #self.frame_play()
             else:
                 self.refresh()
                 threading.Thread(target = self.arrObj.bubble_sort(False,self,self.execSpeed.get())).start()
