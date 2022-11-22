@@ -74,8 +74,8 @@ class Sorting:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
                         self.arr[j+1] = temp
-                        x0,y0,x1,y1 = guiObj.canvas.coords(guiObj.arrRec[j][0])
-                        x2,y2,x3,y3 = guiObj.canvas.coords(guiObj.arrRec[j+1][0])
+                        x0,_,x1,_ = guiObj.canvas.coords(guiObj.arrRec[j][0])
+                        x2,_,x3,_ = guiObj.canvas.coords(guiObj.arrRec[j+1][0])
                         guiObj.canvas.move(guiObj.arrRec[j][0],x2-x0,0)
                         guiObj.canvas.move(guiObj.arrRec[j+1][0],x1-x3,0)
                         guiObj.arrRec[j],guiObj.arrRec[j+1] = guiObj.arrRec[j+1],guiObj.arrRec[j]
@@ -382,6 +382,7 @@ class GUI:
         # array for frames
         self.arrFrame = []
         self.arrRec = []
+        self.pp = False
         
 
         #frame / base layout
@@ -403,9 +404,9 @@ class GUI:
         self.algMenu.grid(row=0,column=1,padx=5,pady=5)
         self.algMenu.current(0)
         Button(self.UI_frame,text="Generate",command=self.generate,bg='blue').grid(row=0,column=2,padx=5,pady=5)
-        Button(self.UI_frame,text="Execute",command=self.execute_thread,bg='red').grid(row=0,column=3,padx=5,pady=5)
+        #Button(self.UI_frame,text="Execute",command=self.execute_thread,bg='red').grid(row=0,column=3,padx=5,pady=5)
         #Button(self.UI_frame,text="Execute",command=multiprocessing.Process(target=self.execute).start,bg='red').grid(row=0,column=3,padx=5,pady=5)
-        #Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
+        Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
         Button(self.UI_frame,text="Reset",command=self.reset,bg='green').grid(row=0,column=4,padx=5,pady=5)
         self.modeMenu = ttk.Combobox(self.UI_frame,textvariable=self.mode,values=['Ascending','Decsending'])
         self.modeMenu.grid(row=0,column=5,padx=5,pady=5)
@@ -430,11 +431,14 @@ class GUI:
         self.execSpeed.grid(row=2,column=0,padx=5,pady=5,sticky=W)
         
         #Bottom right UI ROW 0
-        self.ppButton = Button(self.box_frame,text="PAUSE",bg='grey')
+        self.ppButton = Button(self.box_frame,text="PAUSE",bg='grey',command=self.pause_play)
         self.ppButton.grid(row=0,column=1,padx=5,pady=5)
 
         Button(self.box_frame,text="<",bg='grey').grid(row=0,column=0,padx=5,pady=5)
         Button(self.box_frame,text=">",bg='grey').grid(row=0,column=2,padx=5,pady=5)
+
+    def pause_play(self):
+        self.pp = not self.pp
 
     def execute_thread(self):
         thread = threading.Thread(target = self.execute)
@@ -461,14 +465,18 @@ class GUI:
         self.upperBound.delete(0,'end')
 
     def frame_play(self,x = 0):
-        if x == len(self.arrFrame): return
-        else: 
-            self.draw_data_tup(self.arrFrame[x])
-            self.master.after(50,self.frame_play, x+1)
+        #if x == len(self.arrFrame): return
+        #else: 
+            #self.draw_data_tup(self.arrFrame[x])
+            #self.master.after(50,self.frame_play, x+1)
 
-        #for x in self.arrFrame:
-        #    self.draw_data_tup(x)
-        #    self.master.update()
+        for x in self.arrFrame:
+            self.draw_data_tup(x)
+            self.master.update()
+            if(self.pp):
+                while(self.pp):
+                    self.master.update()
+                    pass
             #time.sleep(1)
         
 
@@ -491,9 +499,9 @@ class GUI:
             y1 = c_height
             self.canvas.create_rectangle(x0,y0,x1,y1,fill=frame[1][i])
             self.canvas.create_text(x0+2,y0,anchor=SW,text=str(frame[0][i]))
-            self.master.update()
-        #self.master.update_idletasks()
-        self.master.update()
+            #self.master.update()
+        self.master.update_idletasks()
+        #self.master.update()
 
     def draw_data(self,colorArr):
         self.canvas.delete("all")
@@ -530,7 +538,7 @@ class GUI:
                 #threading.Thread(target = self.frame_play()).start()
                 #self.frame_play()
             else:
-                self.refresh()
+                #self.refresh()
                 threading.Thread(target = self.arrObj.bubble_sort(False,self,self.execSpeed.get())).start()
                 self.frame_play()
         elif self.algChoice.get() == 'Selection Sort':
@@ -553,8 +561,9 @@ class GUI:
                 self.frame_play()
         elif self.algChoice.get() == 'Merge Sort':
             if self.mode.get() == 'Ascending':
-                self.refresh()
-                threading.Thread(target = self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
+                self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
                 self.frame_play()
             else:
                 self.refresh()
