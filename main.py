@@ -6,7 +6,6 @@ import random
 import tkinter.messagebox
 import time
 import threading
-import multiprocessing
 
 class Sorting:
 
@@ -16,7 +15,7 @@ class Sorting:
         self.max_num = max_num
         self.arr = []
     
-        for x in range(self.num_elem):
+        for _ in range(self.num_elem):
             self.arr.append(random.randint(self.min_num,self.max_num))
 
     def selection_sort(self,mode,guiObj,speed):
@@ -24,42 +23,47 @@ class Sorting:
             for i in range (self.num_elem):
                 smallest = i
                 #guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
-                guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))]))
+                guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 #time.sleep(speed)
                 for j in range (i+1, self.num_elem):
                     #guiObj.draw_data(['green' if x == i or x == j else 'blue' if x == smallest and x != i else 'red' for x in range(len(self.arr))])
-                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'blue' if x == smallest and x != i else 'red' for x in range(len(self.arr))]))
+                    #guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'blue' if x == smallest and x != i else 'red' for x in range(len(self.arr))]))
                     #time.sleep(speed)
+                    guiObj.numCompare += 1
                     if self.arr[smallest] > self.arr[j]:
                         smallest = j
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'blue' if x == smallest and x != i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                guiObj.numCompare += 1
                 if i != smallest:
                     temp = self.arr[smallest]
                     self.arr[smallest] = self.arr[i]
                     self.arr[i] = temp
                     #guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
-                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))]))
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                     #time.sleep(speed)
         else:
             for i in range (self.num_elem):
                 largest = i
                 #guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
-                guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))]))
+                guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 #time.sleep(speed)
                 for j in range (i+1, self.num_elem):
                     #guiObj.draw_data(['green' if x == i or x == j else 'blue' if x == largest and x != i else 'red' for x in range(len(self.arr))])
-                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'blue' if x == largest and x != i else 'red' for x in range(len(self.arr))]))
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'blue' if x == largest and x != i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                     #time.sleep(speed)
+                    guiObj.numCompare += 1
                     if self.arr[largest] < self.arr[j]:
                         largest = j
+                guiObj.numCompare += 1
                 if i != largest:
                     temp = self.arr[largest]
                     self.arr[largest] = self.arr[i]
                     self.arr[i] = temp
                     #guiObj.draw_data(['green' if x == i else 'red' for x in range(len(self.arr))])
-                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))]))
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                     #time.sleep(speed)
         #guiObj.draw_data(['green' for x in range(len(self.arr))])
-        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))]))
+        guiObj.arrFrame.append((self.arr.copy(),['green' for _ in range(len(self.arr))],guiObj.numCompare))
 
         #print(self.canvas.coords(self.arrRec[0][0]))
         #print(self.canvas.itemcget(self.arrRec[0][0],"fill"))
@@ -70,6 +74,7 @@ class Sorting:
         if mode == True:
             for i in range (self.num_elem):
                 for j in range(self.num_elem-(i+1)):
+                    guiObj.numCompare += 1
                     if self.arr[j] > self.arr[j+1]:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
@@ -84,43 +89,48 @@ class Sorting:
                         #if k == j or k == j+1: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='green')
                         #else: guiObj.canvas.itemconfig(guiObj.arrRec[k][0], fill='red')
                         #guiObj.master.update()
-                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                         #time.sleep(speed)
         else:
             for i in range (self.num_elem):
                 for j in range(self.num_elem-(i+1)):
+                    guiObj.numCompare += 1
                     if self.arr[j] < self.arr[j+1]:
                         temp = self.arr[j]
                         self.arr[j] = self.arr[j+1]
                         self.arr[j+1] = temp
 
-                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))]))
+                    guiObj.arrFrame.append((self.arr.copy(),['green' if x == j or x == j+1 else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                         #time.sleep(speed)
         #guiObj.draw_data(['green' for x in range(len(self.arr))])
-        #guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))]))
+        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))],guiObj.numCompare))
 
 
     def insertion_sort(self,mode,guiObj,speed):
         if mode == True:
             for i in range (1,self.num_elem):
                 #guiObj.draw_data(['green' if x == i or x == i-1 else 'red' for x in range(len(self.arr))])
-                guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == i-1 else 'red' for x in range(len(self.arr))]))
+                guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == i-1 else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 #time.sleep(speed)
+                guiObj.numCompare += 1
                 if self.arr[i] < self.arr[i-1]:
                     replace = i
                     for j in range(i,0,-1):
                         #guiObj.draw_data(['green' if x == i or x == j else 'red' for x in range(len(self.arr))])
-                        guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'red' for x in range(len(self.arr))]))
+                        #guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'red' for x in range(len(self.arr))]))
                         #time.sleep(speed)
+                        guiObj.numCompare += 1
                         if(self.arr[i] > self.arr[j-1]):
                             replace = j
                             break
+                        guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    guiObj.numCompare += 1
                     if replace == i: replace = 0
                     temp = self.arr[i]
                     for j in range (i, replace, -1):
                         self.arr[j] = self.arr[j-1]
                         #guiObj.draw_data(['green' if x == i or x == replace else 'blue' if x == j or x == j-1 else 'red' for x in range(len(self.arr))])
-                        guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == replace else 'blue' if x == j or x == j-1 else 'red' for x in range(len(self.arr))]))
+                        guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == replace else 'blue' if x == j or x == j-1 else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                         #time.sleep(speed)
                     self.arr[replace] = temp
         else:
@@ -128,15 +138,18 @@ class Sorting:
                 #guiObj.draw_data(['green' if x == i or x == i-1 else 'red' for x in range(len(self.arr))])
                 guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == i-1 else 'red' for x in range(len(self.arr))]))
                 #time.sleep(speed)
+                guiObj.numCompare += 1
                 if self.arr[i] > self.arr[i-1]:
                     replace = i
                     for j in range(i,0,-1):
                         #guiObj.draw_data(['green' if x == i or x == j else 'red' for x in range(len(self.arr))])
                         guiObj.arrFrame.append((self.arr.copy(),['green' if x == i or x == j else 'red' for x in range(len(self.arr))]))
                         #time.sleep(speed)
+                        guiObj.numCompare += 1
                         if(self.arr[i] < self.arr[j-1]):
                             replace = j
                             break
+                    guiObj.numCompare += 1
                     if replace == i: replace = 0
                     temp = self.arr[i]
                     for j in range (i, replace, -1):
@@ -384,6 +397,7 @@ class GUI:
         self.arrRec = []
         self.pp = False
         self.index = 0
+        self.numCompare = 0
         
 
         #frame / base layout
@@ -412,6 +426,12 @@ class GUI:
         self.modeMenu = ttk.Combobox(self.UI_frame,textvariable=self.mode,values=['Ascending','Decsending'])
         self.modeMenu.grid(row=0,column=5,padx=5,pady=5)
         self.modeMenu.current(0)
+
+        Label(self.stat_frame,text="Comparisions: ").grid(row=0,column=0,padx=5,pady=5)
+        self.comparisons = Entry(self.stat_frame,width=10)
+        self.comparisons.grid(row=0,column=1,padx=5,pady=5)
+        self.comparisons.insert(0,str(self.numCompare))
+        self.comparisons.config(state=DISABLED)
 
 
         #UI Area ROW 1
@@ -482,19 +502,23 @@ class GUI:
         self.upperBound.delete(0,'end')
 
     def frame_play(self,x = 0):
-        #if x == len(self.arrFrame): return
-        #else: 
-            #self.draw_data_tup(self.arrFrame[x])
-            #self.master.after(50,self.frame_play, x+1)
         self.index = 0
-
+        self.numCompare = 0
         for x in range(len(self.arrFrame)):
             self.index = x
             self.draw_data_tup(self.arrFrame[x])
+            self.comparisons.config(state=NORMAL)
+            self.comparisons.delete(0,END)
+            self.comparisons.insert(0,str(self.arrFrame[x][2]))
+            self.comparisons.config(state=DISABLED)
             self.master.update()
             if(self.pp):
                 while(self.pp):
                     self.draw_data_tup(self.arrFrame[self.index])
+                    self.comparisons.config(state=NORMAL)
+                    self.comparisons.delete(0,END)
+                    self.comparisons.insert(0,str(self.arrFrame[self.index][2]))
+                    self.comparisons.config(state=DISABLED)
                     self.master.update()
             time.sleep(self.execSpeed.get())
         
