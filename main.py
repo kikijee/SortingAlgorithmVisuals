@@ -236,42 +236,52 @@ class Sorting:
             partition_pos = self.partition(guiObj,mode,left,right)
             self.quick_sort(guiObj, mode, left, partition_pos-1)
             self.quick_sort(guiObj, mode, partition_pos+1,right)
-        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))]))
+        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))],guiObj.numCompare))
 
     # helper function to quick sort
     def partition(self,guiObj,mode,left,right):
         i = left           # left incrementer
         j = right-1        # right incrementer
         pivot = self.arr[right] # piviot will always be the right most element
-        guiObj.arrFrame.append((self.arr.copy(),['pink' if left <= x <= right else'red' for x in range(len(self.arr))]))
+        guiObj.arrFrame.append((self.arr.copy(),['pink' if left <= x <= right else'red' for x in range(len(self.arr))],guiObj.numCompare))
         # acsending order
         if mode == True:
             while i < j:
                 while i < right and self.arr[i] < pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
-                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))]))
+                    guiObj.numCompare += 1
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 while j > left and self.arr[j] >= pivot:  # increment j until we find a element less than less than pivot
-                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))]))
                     j -= 1
+                    guiObj.numCompare += 1
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                guiObj.numCompare += 1
                 if i < j:   # swap these elements if i and j did not cross yet
                     self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
-                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))]))
+                guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+            guiObj.numCompare += 1
             if self.arr[i] > pivot:  # if our ending position of i is greater than pivot, swap these values
                 self.arr[i], self.arr[right] = self.arr[right], self.arr[i]
-                guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))]))
+            guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
         # decsending order
-        '''
         else:
             while i < j:
-                while i < right and arr[i] > pivot:
+                while i < right and self.arr[i] > pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
-                while j > left and arr[j] < pivot:
+                    guiObj.numCompare += 1
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                while j > left and self.arr[j] <= pivot:  # increment j until we find a element less than less than pivot
                     j -= 1
-                if i < j:
-                    arr[i], arr[j] = arr[j], arr[i]
-            if arr[i] < pivot:
-                arr[i], arr[right] = arr[right], arr[i]
-        '''
+                    guiObj.numCompare += 1
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                guiObj.numCompare += 1
+                if i < j:   # swap these elements if i and j did not cross yet
+                    self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
+                guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+            guiObj.numCompare += 1
+            if self.arr[i] < pivot:  # if our ending position of i is greater than pivot, swap these values
+                self.arr[i], self.arr[right] = self.arr[right], self.arr[i]
+            guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
         return i
 
     def heap_sort(self,mode,guiObj):
@@ -282,46 +292,61 @@ class Sorting:
         for j in range(len(self.arr)-1,0,-1):
             self.arr[0], self.arr[j] = self.arr[j], self.arr[0]
             self.sift_down(mode,guiObj,0,j)
-        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))]))
+        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))],guiObj.numCompare))
     #i is the parent index and upper is the bounds of the array that we are to stay within
     def sift_down(self,mode,guiObj,i,upper):
-        guiObj.arrFrame.append((self.arr.copy(),['red' for x in range(len(self.arr))]))
+        guiObj.arrFrame.append((self.arr.copy(),['red' for x in range(len(self.arr))],guiObj.numCompare))
         while(True):
             left_child = i*2+1
             right_child = i*2+2
-            guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))]))
+            guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
             # checking if left and right child are valid index's note: upper can be anything 1-len(arr)
             if max(left_child,right_child) < upper:
+                guiObj.numCompare += 1
                 # checking if parent is of a higher value than its children, if so then break
-                if self.arr[i] >= max(self.arr[left_child],self.arr[right_child]): break
+                if self.arr[i] >= max(self.arr[left_child],self.arr[right_child]):
+                    guiObj.numCompare += 1
+                    break
                 # if left child is greater than parent, then swap
                 elif self.arr[left_child] > self.arr[right_child]:
+                    guiObj.numCompare += 1
                     self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
                     i = left_child  # must update parent
                 # if right child is greater than parent, then swap
                 else:
+                    guiObj.numCompare += 2
                     self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
                     i = right_child # must update parent
-                guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))]))
+                guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
             # check left child
             elif left_child < upper:
+                guiObj.numCompare += 1
                 # if left child is greater than parent, then swap
                 if self.arr[left_child] > self.arr[i]:
+                    guiObj.numCompare += 1
                     self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
                     i = left_child  # must update parent
-                    guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))]))
+                    guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 # if this statement hits, it means that there is no need to continue
-                else: break
+                else: 
+                    guiObj.numCompare += 1
+                    break
             elif right_child < upper:
+                guiObj.numCompare += 1
                 # if right child is greater than parent, then swap
                 if self.arr[right_child] > self.arr[i]:
+                    guiObj.numCompare += 1
                     self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
                     i = right_child  # must update parent
-                    guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))]))
+                    guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 # if this statement hits, it means that there is no need to continue
-                else: break
+                else: 
+                    guiObj.numCompare += 1
+                    break
             # conditional for no children
-            else: break
+            else:
+                guiObj.numCompare += 3 
+                break
 
 class GUI:
 
@@ -563,15 +588,23 @@ class GUI:
                 self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
                 self.frame_play()
         elif self.algChoice.get() == 'Quick Sort':
-            #self.refresh()
-            #threading.Thread(target = self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)).start()
-            self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)
-            self.frame_play()
+            if self.mode.get() == 'Ascending':
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)).start()
+                self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)
+                self.frame_play()
+            else:
+                self.arrObj.quick_sort(self,False,0,len(self.arrObj.arr)-1)
+                self.frame_play()
         elif self.algChoice.get() == 'Heap Sort':
-            #self.refresh()
-            #threading.Thread(target = self.arrObj.heap_sort(True,self))
-            self.arrObj.heap_sort(True,self)
-            self.frame_play()
+            if self.mode.get() == 'Ascending':
+                #self.refresh()
+                #threading.Thread(target = self.arrObj.heap_sort(True,self))
+                self.arrObj.heap_sort(True,self)
+                self.frame_play()
+            else:
+                self.arrObj.heap_sort(False,self)
+                self.frame_play()
 
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
