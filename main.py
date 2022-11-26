@@ -296,58 +296,110 @@ class Sorting:
     #i is the parent index and upper is the bounds of the array that we are to stay within
     def sift_down(self,mode,guiObj,i,upper):
         guiObj.arrFrame.append((self.arr.copy(),['red' for x in range(len(self.arr))],guiObj.numCompare))
-        while(True):
-            left_child = i*2+1
-            right_child = i*2+2
-            guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
-            # checking if left and right child are valid index's note: upper can be anything 1-len(arr)
-            if max(left_child,right_child) < upper:
-                guiObj.numCompare += 1
-                # checking if parent is of a higher value than its children, if so then break
-                if self.arr[i] >= max(self.arr[left_child],self.arr[right_child]):
-                    guiObj.numCompare += 1
-                    break
-                # if left child is greater than parent, then swap
-                elif self.arr[left_child] > self.arr[right_child]:
-                    guiObj.numCompare += 1
-                    self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
-                    i = left_child  # must update parent
-                # if right child is greater than parent, then swap
-                else:
-                    guiObj.numCompare += 2
-                    self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
-                    i = right_child # must update parent
+        if mode == True:
+            while(True):
+                left_child = i*2+1
+                right_child = i*2+2
                 guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
-            # check left child
-            elif left_child < upper:
-                guiObj.numCompare += 1
-                # if left child is greater than parent, then swap
-                if self.arr[left_child] > self.arr[i]:
-                    guiObj.numCompare += 1
-                    self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
-                    i = left_child  # must update parent
+                # checking if left and right child are valid index's note: upper can be anything 1-len(arr)
+                if max(left_child,right_child) < upper:
+                    #guiObj.numCompare += 1
+                    # checking if parent is of a higher value than its children, if so then break
+                    if self.arr[i] >= max(self.arr[left_child],self.arr[right_child]):
+                        guiObj.numCompare += 1
+                        break
+                    # if left child is greater than parent, then swap
+                    elif self.arr[left_child] > self.arr[right_child]:
+                        guiObj.numCompare += 1
+                        self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
+                        i = left_child  # must update parent
+                    # if right child is greater than parent, then swap
+                    else:
+                        guiObj.numCompare += 2
+                        self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
+                        i = right_child # must update parent
                     guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
-                # if this statement hits, it means that there is no need to continue
-                else: 
-                    guiObj.numCompare += 1
+                # check left child
+                elif left_child < upper:
+                    #guiObj.numCompare += 1
+                    # if left child is greater than parent, then swap
+                    if self.arr[left_child] > self.arr[i]:
+                        guiObj.numCompare += 1
+                        self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
+                        i = left_child  # must update parent
+                        guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    # if this statement hits, it means that there is no need to continue
+                    else: 
+                        guiObj.numCompare += 1
+                        break
+                elif right_child < upper:
+                    #guiObj.numCompare += 1
+                    # if right child is greater than parent, then swap
+                    if self.arr[right_child] > self.arr[i]:
+                        guiObj.numCompare += 1
+                        self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
+                        i = right_child  # must update parent
+                        guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    # if this statement hits, it means that there is no need to continue
+                    else: 
+                        guiObj.numCompare += 1
+                        break
+                # conditional for no children
+                else:
+                    #guiObj.numCompare += 3 
                     break
-            elif right_child < upper:
-                guiObj.numCompare += 1
-                # if right child is greater than parent, then swap
-                if self.arr[right_child] > self.arr[i]:
+        else:
+            while(True):
+                left_child = i*2+1
+                right_child = i*2+2
+                guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                # checking if left and right child are valid index's note: upper can be anything 1-len(arr)
+                if max(left_child,right_child) < upper:
                     guiObj.numCompare += 1
-                    self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
-                    i = right_child  # must update parent
+                    # checking if parent is of a higher value than its children, if so then break
+                    if self.arr[i] <= min(self.arr[left_child],self.arr[right_child]):
+                        guiObj.numCompare += 1
+                        break
+                    # if left child is greater than parent, then swap
+                    elif self.arr[left_child] < self.arr[right_child]:
+                        guiObj.numCompare += 1
+                        self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
+                        i = left_child  # must update parent
+                    # if right child is greater than parent, then swap
+                    else:
+                        guiObj.numCompare += 2
+                        self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
+                        i = right_child # must update parent
                     guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
-                # if this statement hits, it means that there is no need to continue
-                else: 
+                # check left child
+                elif left_child < upper:
                     guiObj.numCompare += 1
+                    # if left child is greater than parent, then swap
+                    if self.arr[left_child] < self.arr[i]:
+                        guiObj.numCompare += 1
+                        self.arr[left_child], self.arr[i] = self.arr[i], self.arr[left_child]
+                        i = left_child  # must update parent
+                        guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    # if this statement hits, it means that there is no need to continue
+                    else: 
+                        guiObj.numCompare += 1
+                        break
+                elif right_child < upper:
+                    guiObj.numCompare += 1
+                    # if right child is greater than parent, then swap
+                    if self.arr[right_child] < self.arr[i]:
+                        guiObj.numCompare += 1
+                        self.arr[right_child], self.arr[i] = self.arr[i], self.arr[right_child]
+                        i = right_child  # must update parent
+                        guiObj.arrFrame.append((self.arr.copy(),['purple' if x == left_child and left_child < upper else 'blue' if x == right_child and right_child < upper else 'orange' if x == i else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    # if this statement hits, it means that there is no need to continue
+                    else: 
+                        guiObj.numCompare += 1
+                        break
+                # conditional for no children
+                else:
+                    guiObj.numCompare += 3 
                     break
-            # conditional for no children
-            else:
-                guiObj.numCompare += 3 
-                break
-
 class GUI:
 
     def __init__(self, root):
