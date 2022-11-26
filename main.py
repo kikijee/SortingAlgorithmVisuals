@@ -6,6 +6,7 @@ import random
 import tkinter.messagebox
 import time
 import threading
+import asyncio
 
 class Sorting:
 
@@ -419,7 +420,6 @@ class GUI:
         self.pp = False
         self.index = 0
         self.numCompare = 0
-        
 
         #frame / base layout
         self.canvas = Canvas(self.master,width=875,height=400,bg='white')
@@ -530,11 +530,8 @@ class GUI:
         self.pp = False
         self.ppButton['text'] = 'Pause'
 
-    def frame_play(self,x = 0):
-        self.index = x
-        self.numCompare = 0
-        self.abort = False
-        
+    def frame_play(self):
+        '''
         while(self.index < len(self.arrFrame) and not self.abort):
             self.draw_data_tup(self.arrFrame[self.index])
             self.comparisons.config(state=NORMAL)
@@ -552,6 +549,25 @@ class GUI:
                     self.comparisons.config(state=DISABLED)
                     self.master.update()
             time.sleep(self.execSpeed.get())
+        '''
+        if self.abort: return
+        if self.index >= len(self.arrFrame):return
+        self.draw_data_tup(self.arrFrame[self.index])
+        self.comparisons.config(state=NORMAL)
+        self.comparisons.delete(0,END)
+        self.comparisons.insert(0,str(self.arrFrame[self.index][2]))
+        self.comparisons.config(state=DISABLED)
+        self.master.update()
+        self.index+=1
+        if(self.pp):
+            while(self.pp and not self.abort):
+                self.draw_data_tup(self.arrFrame[self.index])
+                self.comparisons.config(state=NORMAL)
+                self.comparisons.delete(0,END)
+                self.comparisons.insert(0,str(self.arrFrame[self.index][2]))
+                self.comparisons.config(state=DISABLED)
+                self.master.update()
+        self.master.after(int(self.execSpeed.get()*100),self.frame_play)
         
 
     def draw_data_tup(self,frame):
@@ -607,6 +623,9 @@ class GUI:
         self.sizeEntry.config(state=DISABLED)
         self.lowerBound.config(state=DISABLED)
         self.upperBound.config(state=DISABLED)
+        self.numCompare = 0
+        self.index = 0
+        self.abort = False
         if self.algChoice.get() == 'Bubble Sort':
             if self.mode.get() == 'Ascending':
                 #self.refresh()
