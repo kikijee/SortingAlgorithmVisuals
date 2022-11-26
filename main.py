@@ -415,7 +415,7 @@ class GUI:
         self.master.config(bg="black")
         # array for frames
         self.arrFrame = []
-        self.arrRec = []
+        self.abort = False
         self.pp = False
         self.index = 0
         self.numCompare = 0
@@ -518,23 +518,28 @@ class GUI:
 
     def reset(self):
         self.canvas.delete("all")
-        self.sizeEntry.delete(0,'end')
-        self.lowerBound.delete(0,'end')
-        self.upperBound.delete(0,'end')
+        #self.sizeEntry.delete(0,'end')
+        #self.lowerBound.delete(0,'end')
+        #self.upperBound.delete(0,'end')
+        self.arrFrame.clear()
+        self.arrObj.arr.clear()
+        self.abort = True
 
     def frame_play(self,x = 0):
         self.index = 0
         self.numCompare = 0
-        for x in range(len(self.arrFrame)):
-            self.index = x
-            self.draw_data_tup(self.arrFrame[x])
+        self.abort = False
+        
+        while(self.index < len(self.arrFrame) and not self.abort):
+            self.draw_data_tup(self.arrFrame[self.index])
             self.comparisons.config(state=NORMAL)
             self.comparisons.delete(0,END)
-            self.comparisons.insert(0,str(self.arrFrame[x][2]))
+            self.comparisons.insert(0,str(self.arrFrame[self.index][2]))
             self.comparisons.config(state=DISABLED)
             self.master.update()
+            self.index+=1
             if(self.pp):
-                while(self.pp):
+                while(self.pp and not self.abort):
                     self.draw_data_tup(self.arrFrame[self.index])
                     self.comparisons.config(state=NORMAL)
                     self.comparisons.delete(0,END)
@@ -584,12 +589,8 @@ class GUI:
             #bottom right
             x1 = (i+1) * x_width + offset
             y1 = c_height
-            self.arrRec.append((self.canvas.create_rectangle(x0,y0,x1,y1,fill=colorArr[i]),self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))))
-            #self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
-        print(self.canvas.coords(self.arrRec[0][0]))
-        print(self.canvas.itemcget(self.arrRec[0][0],"fill"))
-        #canvas.itemconfig(rectangle, fill='green')
-        #canvas.coords(rectangle, x0, y0, x1, y1)
+            self.canvas.create_rectangle(x0,y0,x1,y1,fill=colorArr[i])
+            self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
         self.master.update_idletasks()
 
     def execute(self):
