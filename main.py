@@ -439,11 +439,14 @@ class GUI:
         self.algMenu = ttk.Combobox(self.UI_frame,textvariable=self.algChoice,values=['Insertion Sort','Bubble Sort','Selection Sort','Merge Sort','Quick Sort','Heap Sort'])
         self.algMenu.grid(row=0,column=1,padx=5,pady=5)
         self.algMenu.current(0)
-        Button(self.UI_frame,text="Generate",command=self.generate,bg='blue').grid(row=0,column=2,padx=5,pady=5)
+        self.genButton = Button(self.UI_frame,text="Generate",command=self.generate,bg='blue')
+        self.genButton.grid(row=0,column=2,padx=5,pady=5)
         #Button(self.UI_frame,text="Execute",command=self.execute_thread,bg='red').grid(row=0,column=3,padx=5,pady=5)
         #Button(self.UI_frame,text="Execute",command=multiprocessing.Process(target=self.execute).start,bg='red').grid(row=0,column=3,padx=5,pady=5)
-        Button(self.UI_frame,text="Execute",command=self.execute,bg='red').grid(row=0,column=3,padx=5,pady=5)
-        Button(self.UI_frame,text="Reset",command=self.reset,bg='green').grid(row=0,column=4,padx=5,pady=5)
+        self.execButton = Button(self.UI_frame,text="Execute",command=self.execute,bg='red')
+        self.execButton.grid(row=0,column=3,padx=5,pady=5)
+        self.resetButton = Button(self.UI_frame,text="Reset",command=self.reset,bg='green')
+        self.resetButton.grid(row=0,column=4,padx=5,pady=5)
         self.modeMenu = ttk.Combobox(self.UI_frame,textvariable=self.mode,values=['Ascending','Decsending'])
         self.modeMenu.grid(row=0,column=5,padx=5,pady=5)
         self.modeMenu.current(0)
@@ -524,9 +527,11 @@ class GUI:
         self.arrFrame.clear()
         self.arrObj.arr.clear()
         self.abort = True
+        self.pp = False
+        self.ppButton['text'] = 'Pause'
 
     def frame_play(self,x = 0):
-        self.index = 0
+        self.index = x
         self.numCompare = 0
         self.abort = False
         
@@ -595,6 +600,13 @@ class GUI:
 
     def execute(self):
         self.arrFrame.clear()
+        self.execButton["state"] = "disabled"
+        self.genButton["state"] = "disabled"
+        self.modeMenu.config(state=DISABLED)
+        self.algMenu.config(state=DISABLED)
+        self.sizeEntry.config(state=DISABLED)
+        self.lowerBound.config(state=DISABLED)
+        self.upperBound.config(state=DISABLED)
         if self.algChoice.get() == 'Bubble Sort':
             if self.mode.get() == 'Ascending':
                 #self.refresh()
@@ -658,6 +670,13 @@ class GUI:
             else:
                 self.arrObj.heap_sort(False,self)
                 self.frame_play()
+        self.execButton["state"] = "normal"
+        self.genButton["state"] = "normal"
+        self.algMenu.config(state=NORMAL)
+        self.modeMenu.config(state=NORMAL)
+        self.sizeEntry.config(state=NORMAL)
+        self.lowerBound.config(state=NORMAL)
+        self.upperBound.config(state=NORMAL)
 
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
