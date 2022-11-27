@@ -446,7 +446,7 @@ class GUI:
         self.genButton.grid(row=0,column=2,padx=5,pady=5)
         #Button(self.UI_frame,text="Execute",command=self.execute_thread,bg='red').grid(row=0,column=3,padx=5,pady=5)
         #Button(self.UI_frame,text="Execute",command=multiprocessing.Process(target=self.execute).start,bg='red').grid(row=0,column=3,padx=5,pady=5)
-        self.execButton = Button(self.UI_frame,text="Execute",command=self.execute,bg='red')
+        self.execButton = Button(self.UI_frame,text="Execute",command=self.execute,bg='red',state=DISABLED)
         self.execButton.grid(row=0,column=3,padx=5,pady=5)
         self.resetButton = Button(self.UI_frame,text="Reset",command=self.reset,bg='green')
         self.resetButton.grid(row=0,column=4,padx=5,pady=5)
@@ -521,6 +521,7 @@ class GUI:
             self.input_error()
             return
         self.draw_data(['red' for x in range(len(self.arrObj.arr))])
+        self.execButton.config(state=NORMAL)
 
     def reset(self):
         self.canvas.delete("all")
@@ -532,6 +533,7 @@ class GUI:
         self.abort = True
         self.pp = False
         self.ppButton['text'] = 'Pause'
+        if(not self.arrObj.arr):self.execButton.config(state=DISABLED)
 
     def frame_play(self):
         if self.abort: 
@@ -606,63 +608,45 @@ class GUI:
 
     def execute(self):
         self.arrFrame.clear()
-        self.execButton["state"] = "disabled"
-        self.genButton["state"] = "disabled"
+        self.execButton.config(state=DISABLED)
+        self.genButton.config(state=DISABLED)
         self.modeMenu.config(state=DISABLED)
         self.algMenu.config(state=DISABLED)
         self.sizeEntry.config(state=DISABLED)
         self.lowerBound.config(state=DISABLED)
         self.upperBound.config(state=DISABLED)
+        self.abort = False
 
         if self.algChoice.get() == 'Bubble Sort':
             if self.mode.get() == 'Ascending':
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.bubble_sort(True,self,self.execSpeed.get())).start()
                 self.arrObj.bubble_sort(True,self,self.execSpeed.get())
-                #threading.Thread(target = self.frame_play()).start()
                 self.frame_play()
             else:
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.bubble_sort(False,self,self.execSpeed.get())).start()
                 self.arrObj.bubble_sort(False,self,self.execSpeed.get())
                 self.frame_play()
         elif self.algChoice.get() == 'Selection Sort':
             if self.mode.get() == 'Ascending':
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.selection_sort(True,self,self.execSpeed.get())).start()
                 self.arrObj.selection_sort(True,self,self.execSpeed.get())
                 self.frame_play()
             else:
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.selection_sort(False,self,self.execSpeed.get())).start()
                 self.arrObj.selection_sort(False,self,self.execSpeed.get())
                 self.frame_play()
         elif self.algChoice.get() == 'Insertion Sort':
             if self.mode.get() == 'Ascending':
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.insertion_sort(True,self,self.execSpeed.get())).start()
                 self.arrObj.insertion_sort(True,self,self.execSpeed.get())
                 self.frame_play()
             else:
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.insertion_sort(False,self,self.execSpeed.get())).start()
                 self.arrObj.insertion_sort(False,self,self.execSpeed.get())
                 self.frame_play()
         elif self.algChoice.get() == 'Merge Sort':
             if self.mode.get() == 'Ascending':
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
                 self.arrObj.merge_sort(True,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
                 self.frame_play()
             else:
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))).start()
                 self.arrObj.merge_sort(False,self,[],['red' for x in range(len(self.arrObj.arr))],self.execSpeed.get(),0,len(self.arrObj.arr))
                 self.frame_play()
         elif self.algChoice.get() == 'Quick Sort':
             if self.mode.get() == 'Ascending':
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)).start()
                 self.arrObj.quick_sort(self,True,0,len(self.arrObj.arr)-1)
                 self.frame_play()
             else:
@@ -670,16 +654,14 @@ class GUI:
                 self.frame_play()
         elif self.algChoice.get() == 'Heap Sort':
             if self.mode.get() == 'Ascending':
-                #self.refresh()
-                #threading.Thread(target = self.arrObj.heap_sort(True,self))
                 self.arrObj.heap_sort(True,self)
                 self.frame_play()
             else:
                 self.arrObj.heap_sort(False,self)
                 self.frame_play()
         self.master.wait_variable(self.done)
-        self.execButton["state"] = "normal"
-        self.genButton["state"] = "normal"
+        self.execButton.config(state=DISABLED)
+        self.genButton.config(state=NORMAL)
         self.algMenu.config(state=NORMAL)
         self.modeMenu.config(state=NORMAL)
         self.sizeEntry.config(state=NORMAL)
@@ -687,6 +669,10 @@ class GUI:
         self.upperBound.config(state=NORMAL)
         self.ppButton.config(state=NORMAL)
         self.numCompare = 0
+        self.comparisons.config(state=NORMAL)
+        self.comparisons.delete(0,END)
+        self.comparisons.insert(0,str(self.numCompare))
+        self.comparisons.config(state=DISABLED)
         self.index = 0
         self.abort = False
         self.pp = False
