@@ -237,52 +237,54 @@ class Sorting:
             partition_pos = self.partition(guiObj,mode,left,right)
             self.quick_sort(guiObj, mode, left, partition_pos-1)
             self.quick_sort(guiObj, mode, partition_pos+1,right)
-        guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))],guiObj.numCompare))
+        if(left == 0 and right == self.num_elem-1):
+            guiObj.arrFrame.append((self.arr.copy(),['green' for x in range(len(self.arr))],guiObj.numCompare))
 
     # helper function to quick sort
     def partition(self,guiObj,mode,left,right):
         i = left           # left incrementer
         j = right-1        # right incrementer
         pivot = self.arr[right] # piviot will always be the right most element
-        guiObj.arrFrame.append((self.arr.copy(),['pink' if left <= x <= right else'red' for x in range(len(self.arr))],guiObj.numCompare))
+        #guiObj.arrFrame.append((self.arr.copy(),['pink' if left <= x <= right else'red' for x in range(len(self.arr))],guiObj.numCompare))
+        guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
         # acsending order
         if mode == True:
             while i < j:
                 while i < right and self.arr[i] < pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
                     guiObj.numCompare += 1
-                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 while j > left and self.arr[j] >= pivot:  # increment j until we find a element less than less than pivot
                     j -= 1
                     guiObj.numCompare += 1
-                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 guiObj.numCompare += 1
                 if i < j:   # swap these elements if i and j did not cross yet
                     self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
-                guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
             guiObj.numCompare += 1
             if self.arr[i] > pivot:  # if our ending position of i is greater than pivot, swap these values
                 self.arr[i], self.arr[right] = self.arr[right], self.arr[i]
-            guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+            guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
         # decsending order
         else:
             while i < j:
                 while i < right and self.arr[i] > pivot: # increment i until we find an element that is bigger than pivot
                     i += 1
                     guiObj.numCompare += 1
-                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 while j > left and self.arr[j] <= pivot:  # increment j until we find a element less than less than pivot
                     j -= 1
                     guiObj.numCompare += 1
-                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                    guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
                 guiObj.numCompare += 1
                 if i < j:   # swap these elements if i and j did not cross yet
                     self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
-                guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+                guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
             guiObj.numCompare += 1
             if self.arr[i] < pivot:  # if our ending position of i is greater than pivot, swap these values
                 self.arr[i], self.arr[right] = self.arr[right], self.arr[i]
-            guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else 'pink' if left <= x <= right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
+            guiObj.arrFrame.append((self.arr.copy(),['blue' if x == i else 'purple' if x == j else "black" if x == right else 'pink' if left <= x < right else 'red' for x in range(len(self.arr))],guiObj.numCompare))
         return i
 
     def heap_sort(self,mode,guiObj):
@@ -420,6 +422,7 @@ class GUI:
         self.pp = False
         self.index = 0
         self.numCompare = 0
+        self.done = IntVar()
 
         #frame / base layout
         self.canvas = Canvas(self.master,width=875,height=400,bg='white')
@@ -531,27 +534,12 @@ class GUI:
         self.ppButton['text'] = 'Pause'
 
     def frame_play(self):
-        '''
-        while(self.index < len(self.arrFrame) and not self.abort):
-            self.draw_data_tup(self.arrFrame[self.index])
-            self.comparisons.config(state=NORMAL)
-            self.comparisons.delete(0,END)
-            self.comparisons.insert(0,str(self.arrFrame[self.index][2]))
-            self.comparisons.config(state=DISABLED)
-            self.master.update()
-            self.index+=1
-            if(self.pp):
-                while(self.pp and not self.abort):
-                    self.draw_data_tup(self.arrFrame[self.index])
-                    self.comparisons.config(state=NORMAL)
-                    self.comparisons.delete(0,END)
-                    self.comparisons.insert(0,str(self.arrFrame[self.index][2]))
-                    self.comparisons.config(state=DISABLED)
-                    self.master.update()
-            time.sleep(self.execSpeed.get())
-        '''
-        if self.abort: return
-        if self.index >= len(self.arrFrame):return
+        if self.abort: 
+            self.done.set(1)
+            return
+        if self.index >= len(self.arrFrame):
+            self.done.set(1)
+            return
         self.draw_data_tup(self.arrFrame[self.index])
         self.comparisons.config(state=NORMAL)
         self.comparisons.delete(0,END)
@@ -559,8 +547,11 @@ class GUI:
         self.comparisons.config(state=DISABLED)
         self.master.update()
         self.index+=1
+        if(self.index == len(self.arrFrame)-1):self.pp=True
         if(self.pp):
             while(self.pp and not self.abort):
+                if(self.index == len(self.arrFrame)-1):self.ppButton.config(state=DISABLED)
+                else:self.ppButton.config(state=NORMAL)
                 self.draw_data_tup(self.arrFrame[self.index])
                 self.comparisons.config(state=NORMAL)
                 self.comparisons.delete(0,END)
@@ -568,7 +559,6 @@ class GUI:
                 self.comparisons.config(state=DISABLED)
                 self.master.update()
         self.master.after(int(self.execSpeed.get()*100),self.frame_play)
-        
 
     def draw_data_tup(self,frame):
         #self.canvas.delete("all")
@@ -623,9 +613,7 @@ class GUI:
         self.sizeEntry.config(state=DISABLED)
         self.lowerBound.config(state=DISABLED)
         self.upperBound.config(state=DISABLED)
-        self.numCompare = 0
-        self.index = 0
-        self.abort = False
+
         if self.algChoice.get() == 'Bubble Sort':
             if self.mode.get() == 'Ascending':
                 #self.refresh()
@@ -689,6 +677,7 @@ class GUI:
             else:
                 self.arrObj.heap_sort(False,self)
                 self.frame_play()
+        self.master.wait_variable(self.done)
         self.execButton["state"] = "normal"
         self.genButton["state"] = "normal"
         self.algMenu.config(state=NORMAL)
@@ -696,6 +685,12 @@ class GUI:
         self.sizeEntry.config(state=NORMAL)
         self.lowerBound.config(state=NORMAL)
         self.upperBound.config(state=NORMAL)
+        self.ppButton.config(state=NORMAL)
+        self.numCompare = 0
+        self.index = 0
+        self.abort = False
+        self.pp = False
+        self.done = IntVar()
 
     def input_error(self):
         tkinter.messagebox.showinfo("ERROR","Invalid parameters")
