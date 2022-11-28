@@ -606,6 +606,15 @@ class GUI:
             self.canvas.create_text(x0+2,y0,anchor=SW,text=str(self.arrObj.arr[i]))
         self.master.update_idletasks()
 
+    def close(self):
+        self.master.quit()
+        self.master.destroy()
+    
+    def on_closing(self):
+        if tkinter.messagebox.askokcancel("Quit", "Do you want to quit?"):
+            self.reset()
+            self.master.after(1000,self.close)
+
     def execute(self):
         self.arrFrame.clear()
         self.execButton.config(state=DISABLED)
@@ -687,4 +696,5 @@ if __name__ == '__main__':
     # False = decending order
     myTkRoot = Tk()
     my_gui = GUI(myTkRoot)
+    myTkRoot.protocol("WM_DELETE_WINDOW",my_gui.on_closing)
     myTkRoot.mainloop()
