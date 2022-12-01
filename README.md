@@ -75,5 +75,8 @@ The *execute* function checks what sorting algorithm to call through the ```self
 The *frame_play* function is the function responsible for the on screen animations.
 ## Design Choice:
 The current design choice for the animation of a selected sorting algorithm has gone through three changes with the third implementation being the current one employed.
-- the first design choice was
+- Current design include the use of the data member ```arrFrame[(IntArray,StingArray,IntComparisons)]``` 
+## How to run:
+- There is a executable file ```main.exe``` included
+- to run on terminal with main.py ```python3 .\main.py```
 
